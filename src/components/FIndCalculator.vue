@@ -1,6 +1,6 @@
 <template lang="pug">
-.-calculator
-  .ui.container.segment
+.-calculator.ui.container.segment
+  .-form.ui.container.segment
     .ui.labeled.input
       .ui.label 現在年齡
       input(type="number" placeholder="40")
@@ -20,10 +20,10 @@
     .ui.divider
 
     .ui.labeled.input
-      .ui.label 每年投資金額
+      .ui.label 投資金額
       input(type="number" placeholder="3600000")
     .ui.labeled.input
-      .ui.label 累積退休資產
+      .ui.label 退休資產
       input(type="number" placeholder="10000000")
 
     .ui.divider
@@ -35,8 +35,7 @@
       .ui.label 低風險資產
       input(type="number" placeholder="6")
 
-  .ui.container.segment
-    line-chart(:chartdata='linedata', :options='options')
+  line-chart(:chartdata='linedata', :options='options')
 
 </template>
 
@@ -75,10 +74,18 @@ export default {
 </script>
 
 <style scoped lang="sass">
+
 .container
-  max-width: 40em !important
   display: flex
   flex-direction: column
+
+.-form
+  max-width: 25em !important
+  flex-direction: column
+
+.ui.segment
+  margin-top: 2em
+  margin-bottom: 1em
 
 .input
   margin: .2em
