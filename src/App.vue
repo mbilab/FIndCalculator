@@ -1,9 +1,11 @@
 <template lang="pug">
 #app
-  .header
-    router-link(to="/") Home
+  .-header
+    h2.ui.header 智能帳房
+    .-nav-links
+      router-link(to="/") Home
     // router-link(to="/about") About
-  router-view
+  router-view.-body
 </template>
 
 <script>
@@ -13,9 +15,10 @@ export default {}
 
 <style lang="sass">
 @import "./assets/variables.sass"
+$headerheight: 3em
 
 #app
-  font-family: Avenir, Helvetica, Arial, sans-serif
+  // font-family: Avenir, Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   text-align: center
@@ -30,4 +33,25 @@ export default {}
 
     &.router-link-exact-active
       color: #42b983
+.-header
+  position: fixed
+  top: 0
+  background-color: $LIGHT-COLOR-1
+  height: $headerheight
+  width: 100%
+  display: flex
+  justify-content: flex-start
+
+.ui.header
+  line-height: 2em
+  padding: 0 1em
+
+.-nav-links
+  display: flex
+  align-items: center
+  a
+    padding: 0 1em
+
+.-body
+  margin-top: $headerheight
 </style>
