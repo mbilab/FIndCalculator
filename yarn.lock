@@ -6854,10 +6854,10 @@ selfsigned@^1.10.8:
   dependencies:
     node-forge "^0.10.0"
 
-semantic-ui-offline@^2.4.1-1:
-  version "2.4.1-1"
-  resolved "https://registry.yarnpkg.com/semantic-ui-offline/-/semantic-ui-offline-2.4.1-1.tgz#c0333bed3bf84280998e2d967b9984c04150b388"
-  integrity sha512-ONx52etmkMax15ur+n2Hi8spC6VfhwlHmeownyq2I3vQTzoJzU9+rTq/fMzjohFpf3YmLdymaXloXH6+/1ycYA==
+semantic-ui-offline@^3.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/semantic-ui-offline/-/semantic-ui-offline-2.4.1.tgz#aaf5cac20e02923f96e3d6af2481fac6f38e2687"
+  integrity sha512-64I4Gi02z+OZSnxooo+hLFshx4UqG98iFT9gLacJOwnoJmQHnTeGV/+RrGIxFPo6kZTJSuI9HUFcsGp+LWJL4w==
   dependencies:
     fs-extra "^4.0.2"
     jquery x.*
