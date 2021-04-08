@@ -4,7 +4,7 @@
     h2.ui.header 智能帳房
     .-nav-links
       router-link(to="/") Home
-    // router-link(to="/about") About
+      // router-link(to="/about") About
   router-view.-body
 </template>
 

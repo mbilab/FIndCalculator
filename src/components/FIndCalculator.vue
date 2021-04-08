@@ -36,7 +36,7 @@
       input(type="number" placeholder="6")
 
   .ui.container.segment
-    line-chart(:chartdata='chartdata', :options='options')
+    line-chart(:chartdata='linedata', :options='options')
 
 </template>
 
@@ -50,7 +50,7 @@ export default {
   },
   data() {
     return {
-      chartdata: {
+      linedata: {
         labels: [
           'January',
           'February',
