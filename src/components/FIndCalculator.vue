@@ -76,7 +76,7 @@ export default {
 
 <style scoped lang="sass">
 .container
-  max-width: 25em !important
+  max-width: 40em !important
   display: flex
   flex-direction: column
 

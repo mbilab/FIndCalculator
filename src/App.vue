@@ -36,11 +36,13 @@ $headerheight: 3em
 .-header
   position: fixed
   top: 0
-  background-color: $LIGHT-COLOR-1
+  background-color: white
   height: $headerheight
   width: 100%
   display: flex
-  justify-content: flex-start
+  justify-content: space-between
+  z-index: 100
+  border-bottom: 1px solid rgba(34, 36, 38, 0.15)
 
 .ui.header
   line-height: 2em
