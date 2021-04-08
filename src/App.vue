@@ -6,7 +6,14 @@
   router-view
 </template>
 
+<script>
+import 'semantic-ui-offline/semantic.css'
+export default {}
+</script>
+
 <style lang="sass">
+@import "./assets/variables.sass"
+
 #app
   font-family: Avenir, Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased

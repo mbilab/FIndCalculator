@@ -5,8 +5,8 @@
 
 <script>
 export default {
-  name: "FIndReport"
-};
+  name: 'FIndReport'
+}
 </script>
 
 <style scoped lang="sass"></style>

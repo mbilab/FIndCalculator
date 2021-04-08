@@ -5,8 +5,8 @@
 
 <script>
 export default {
-  name: "FIndCalculator"
-};
+  name: 'FIndCalculator'
+}
 </script>
 
 <style scoped lang="sass"></style>

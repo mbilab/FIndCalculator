@@ -5,8 +5,8 @@
 
 <script>
 export default {
-  name: "FIndChart"
-};
+  name: 'FIndChart'
+}
 </script>
 
 <style scoped lang="sass"></style>
