@@ -35,13 +35,42 @@
       .ui.label 低風險資產
       input(type="number" placeholder="6")
 
-
+  .ui.container.segment
+    line-chart(:chartdata='chartdata', :options='options')
 
 </template>
 
 <script>
+import LineChart from './LineChart.js'
+
 export default {
-  name: 'FIndCalculator'
+  name: 'FIndCalculator',
+  components: {
+    LineChart
+  },
+  data() {
+    return {
+      chartdata: {
+        labels: [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July'
+        ],
+        datasets: [
+          {
+            label: 'Data One',
+            backgroundColor: '#f87979',
+            data: [40, 39, 10, 40, 39, 80, 40]
+          }
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    }
+  }
 }
 </script>
 
