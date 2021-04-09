@@ -4,7 +4,7 @@
     h2.ui.header Moore
     .-nav-links
       router-link(to="/") Home
-      // router-link(to="/about") About
+      router-link(to="/report") Report
   router-view.-body
 </template>
 
@@ -48,5 +48,5 @@ $header-height: 3rem
 .-body
   height: 100vh
   padding-top: $header-height
-  overflow: hidden
+  overflow: auto
 </style>

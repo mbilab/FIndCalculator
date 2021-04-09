@@ -1,16 +1,16 @@
 <template lang="pug">
-.-home
-    FIndCalculator
+.-report
+    FIndReport
 </template>
 
 <script>
 // @ is an alias to /src
-import FIndCalculator from '@/components/FIndCalculator.vue'
+import FIndReport from '@/components/FIndReport.vue'
 
 export default {
-  name: 'Home',
+  name: 'Report',
   components: {
-    FIndCalculator,
+    FIndReport
   }
 }
 </script>

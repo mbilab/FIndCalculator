@@ -19,11 +19,23 @@
 <script>
 import LineChart from './LineChart.js'
 import Swal from 'sweetalert2'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'FIndCalculator',
   components: {
     LineChart
+  },
+  computed: {
+    ...mapState(['_totalAssets']),
+    totalAssets: {
+      get() {
+        return this._totalAssets
+      },
+      set(v) {
+        this.setTotalAssets(v)
+      }
+    }
   },
   data() {
     return {
@@ -93,7 +105,9 @@ export default {
     })
   },
   methods: {
+    ...mapMutations(['setTotalAssets']),
     find() {
+      this.totalAssets += 1000000
       Swal.fire({
         title: '發大財！',
         text: '一起走向財富自由',
