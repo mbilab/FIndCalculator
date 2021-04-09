@@ -2,15 +2,26 @@
 #app
   .-header
     h2.ui.header Moore
-    //.-nav-links
-      router-link(to="/") Home
-      router-link(to="/report") Report
-  router-view.-body
+  .-body
+    FIndCalculator(v-if='pageShown=="claculator"')
+    FIndReport(v-if='pageShown=="report"')
 </template>
 
 <script>
 import 'semantic-ui-offline/semantic.css'
-export default {}
+import FIndCalculator from '@/components/FIndCalculator.vue'
+
+export default {
+  data() {
+    return {
+      pageShown: 'claculator'
+    }
+  },
+  components: {
+    FIndCalculator,
+    FIndReport: () => import('./components/FIndReport.vue')
+  }
+}
 </script>
 
 <style lang="sass">
