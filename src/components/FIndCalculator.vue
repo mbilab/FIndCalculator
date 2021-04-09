@@ -19,7 +19,7 @@
 
   .ui.statistics(v-if="initialized")
     .statistic
-      .value {{ asset }}
+      .value {{ assets[assets.length - 1] }}
       .label 總資產
     .statistic
       .value {{ initYear + choices.length }}
@@ -32,8 +32,6 @@
     button.ui.button(@click='choose("債券")') 債券
 
   line-chart(v-if="initialized" :chartdata="chartData" :options="chartOptions" ref="chart")
-
-  button.ui.button(v-if="initialized" @click='goal') Goal!
 
 </template>
 
@@ -62,7 +60,7 @@ export default {
 
   data() {
     return {
-      asset: 0,
+      assets: [0],
       chartData: {
         labels: [],
         datasets: [
@@ -78,7 +76,7 @@ export default {
       },
       choices: [],
       initAsset: 0,
-      initialized: false,
+      initialized: true,
       initYear: 2000,
       monthlyDeposit: 30000,
       monthlySpending: 50000,
@@ -88,33 +86,15 @@ export default {
 
   mounted() {
     this.plotPlan()
-
-    this.choices.push('台股', '美股', '債券')
-    this.plotAsset()
+    this.choose('台股')
+    this.choose('美股')
+    this.choose('債券')
   },
 
   methods: {
     ...mapMutations(['setTotalAssets']),
 
     choose(target) {
-      this.choices.push(target)
-      this.plotAsset()
-      if (this.asset > 10000000) this.goal()
-    },
-
-    goal() {
-      Swal.fire({
-        title: '發大財！',
-        text: '一起走向財富自由',
-        imageUrl:
-          'https://img.ltn.com.tw/Upload/news/600/2018/11/23/phpbTcO8E.jpg',
-        imageWidth: 275,
-        imageHeight: 183,
-        imageAlt: 'Custom image'
-      })
-    },
-
-    plotAsset() {
       let historicalProfits = [
         { 台股: 0.23, 美股: 0.16, 債券: 0.08 },
         { 台股: 0.23, 美股: 0.29, 債券: 0.05 },
@@ -138,17 +118,28 @@ export default {
         { 台股: 0.04, 美股: -0.14, 債券: 0.0 },
         { 台股: 0.04, 美股: -0.09, 債券: 0.09 }
       ]
-      let activeAssets = [this.initAsset]
-      let assets = [this.initAsset]
-      this.choices.forEach((c, i) => {
-        let profit = gaussian(historicalProfits[i][c], 0.01 ** 2).random(1)[0]
-        let yearDeposit = this.monthlyDeposit * 12
-        activeAssets.push(activeAssets[i] + yearDeposit)
-        assets.push(Math.floor((assets[i] + yearDeposit) * (1 + profit)))
-      })
-      this.chartData.datasets[2].data = assets
+      let i = this.choices.length
+      let profit = gaussian(historicalProfits[i][target], 0.1 ** 2).random(1)[0]
+      let yearDeposit = this.monthlyDeposit * 12
+      this.assets.push(
+        Math.floor((this.assets[i] + yearDeposit) * (1 + profit))
+      )
+      this.choices.push(target)
+      this.chartData.datasets[2].data = this.assets
       this.$refs.chart.redraw()
-      this.asset = assets[assets.length - 1]
+      if (this.assets[i + 1] > 10000000) this.goal()
+    },
+
+    goal() {
+      Swal.fire({
+        title: '發大財！',
+        text: '一起走向財富自由',
+        imageUrl:
+          'https://img.ltn.com.tw/Upload/news/600/2018/11/23/phpbTcO8E.jpg',
+        imageWidth: 275,
+        imageHeight: 183,
+        imageAlt: 'Custom image'
+      })
     },
 
     plotPlan() {
