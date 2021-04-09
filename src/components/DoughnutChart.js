@@ -1,4 +1,5 @@
 import { Doughnut } from 'vue-chartjs'
+import 'chartjs-plugin-colorschemes'
 
 export default {
   extends: Doughnut,

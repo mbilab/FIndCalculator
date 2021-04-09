@@ -1,26 +1,39 @@
 <template lang="pug">
 .-report
   .ui.container.segment
-    i.close.icon.right.floated(@click='setPageShown("FIndCalculator")')
-    doughnut-chart(v-if='doughnutLoaded', :chartdata='doughnutdata', :options='options')
+    .ui.statistic(@click='setPageShown("FIndCalculator")')
+      .value: a {{ totalAssets }}
+      .label: a
+        i.chart.line.icon
+        | 總資產
+    .ui.divider
+
+    doughnut-chart(v-if='doughnutLoaded' :chartdata='chartData' :height='200' :options='chartOptions')
+
     .-tables
-      table.ui.celled.structured.table
-        thead
-          tr
-            th(colspan='2')  資產
-        tbody(v-for='(value, key) in assets')
-          tr
-            td(@clck='this.assets[key]+=1000000') {{ key }}
-            td {{ value }}
-      table.ui.celled.structured.table
-        thead
-          tr
-            th(colspan='2')  負債
-        tbody(v-for='(value, key) in debt')
-          tr
+      table.ui.celled.compact.small.unstackable.table
+        thead: tr: th(colspan='2') 資產
+        tbody
+          tr(v-for='(value, key) in assets')
             td {{ key }}
             td {{ value }}
-    .label 總資產 {{ totalAssets }}
+        tfoot
+          tr
+            th 合計
+            th {{ totalAssets + 802605 }}
+      table.ui.celled.compact.small.unstackable.table
+        thead: tr: th(colspan='2') 負債
+        tbody
+          tr(v-for='d in debt')
+            td {{ d.name }}
+            td {{ d.value }}
+          tr
+            td -
+            td -
+        tfoot
+          tr
+            th 合計
+            th 802605
 </template>
 
 <script>
@@ -37,6 +50,7 @@ export default {
   },
   computed: {
     ...mapState(['_totalAssets']),
+
     totalAssets: {
       get() {
         return this._totalAssets
@@ -45,7 +59,8 @@ export default {
         this.setTotalAssets(v)
       }
     },
-    doughnutdata: {
+
+    chartData: {
       get() {
         return this.data
       },
@@ -57,47 +72,52 @@ export default {
       }
     }
   },
+
   data() {
     return {
       doughnutLoaded: true,
       assets: {
-        美股: 23423,
-        台股: 23423,
-        美債: 12344
+        存款: 0,
+        證券: 0,
+        信託: 0,
+        債券: 0,
+        自設資產: 0
       },
 
-      debt: {
-        貸款: 80000,
-        信用卡: 3000,
-        融資: 0
-      },
+      debt: [
+        { name: '貸款', value: 800000 },
+        { name: '信用卡款', value: 2605 },
+        { name: '融資借款', value: '-' },
+        { name: '自設負債', value: '-' }
+      ],
 
       data: null,
-      options: { responsive: true, maintainAspectRatio: false }
+      chartOptions: {
+        maintainAspectRatio: false,
+        plugins: { colorschemes: { scheme: 'brewer.PastelOne6' } },
+        responsive: true
+      }
     }
   },
+
   methods: {
     ...mapMutations(['setTotalAssets', 'setPageShown']),
     randomAssets() {
-      let ratios = Array.from({ length: Object.keys(this.assets).length }, v =>
-        Math.random()
+      let assets = Object.keys(this.assets).map(v => Math.random())
+      let sum = assets.reduce((a, c) => a + c, 0)
+      assets = assets.map(v =>
+        Math.round((v / sum) * (this.totalAssets + 802605))
       )
-      let sum = ratios.reduce((l, r) => l + r, 0)
-      for (let asset in this.assets) {
-        this.assets[asset] = Math.round(
-          this.totalAssets * Number((ratios.pop() / sum).toFixed(1))
-        )
-      }
+      for (let asset in this.assets) this.assets[asset] = assets.pop()
 
       let datasets = [
         {
           label: 'Assets',
-          data: Object.values(this.assets),
-          backgroundColor: ['Orange', 'Yellow', 'Green']
+          data: Object.values(this.assets)
         }
       ]
 
-      this.doughnutdata = {
+      this.chartData = {
         labels: Object.keys(this.assets),
         datasets: datasets
       }
@@ -107,11 +127,36 @@ export default {
 </script>
 
 <style scoped lang="sass">
+.ui.segment
+  display: flex
+  flex-direction: column
+  height: calc(100vh - 5rem)
+  justify-content: center
+  margin-top: 1em
+  text-align: center
+
 .-tables
   display: flex
   align-items: flex-start
+  > table:nth-child(1)
+    border-bottom-right-radius: 0
+    border-top-right-radius: 0
+  > table:nth-child(2)
+    border-bottom-left-radius: 0
+    border-left: 0
+    border-top-left-radius: 0
+  td:nth-child(2), tfoot th:nth-child(2)
+    text-align: right
+
+.ui.statistic
+  margin: 0
+  > .value
+    font-size: 2rem !important
+
 .ui.table
+  margin-bottom: 0
   margin-top: 1em
+
 .right.floated
   position: absolute
   top:  1em

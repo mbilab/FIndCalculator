@@ -1,5 +1,5 @@
 <template lang="pug">
-.-calculator.ui.container.segment(:class="{ '-initialized': initialized }")
+.-calculator.ui.container.segment
 
   h2.ui.header(v-show="!initialized") 歡迎來到 Moore，幫助您實現財富自由的好夥伴，輸入後開始體驗吧！
   br(v-if="!initialized")
@@ -16,18 +16,18 @@
   br(v-if="!initialized")
   button.ui.fluid.primary.button(v-if="!initialized" @click='plotPlan') Go!
 
-  div(v-if="initialized")
+  .-initialized(v-if="initialized")
     .ui.divider
-    .ui.statistics
-      .statistic
-        .value {{ totalAssets }}
-        .label 總資產
-        a(@click='setPageShown("FIndReport")') 點擊查看
-      .statistic
-        .value {{ initYear + choices.length }}
-        .label 現在時間
-        | 想要投資什麼嗎？
+    .ui.statistic(v-if="choices.length" @click='setPageShown("FIndReport")')
+      .value: a {{ totalAssets }}
+      .label: a
+        i.search.icon
+        | 總資產
+    .ui.statistic(v-else)
+      .value {{ totalAssets }}
+      .label 總資產
     br
+    p 現在是 {{ year }} 年，想要投資什麼嗎？
     .ui.basic.fluid.tiny.buttons
       button.ui.button(@click='choose("台股")') 台股
       button.ui.button(@click='choose("美股")') 美股
@@ -50,6 +50,7 @@ export default {
   },
   computed: {
     ...mapState(['_totalAssets']),
+
     totalAssets: {
       get() {
         return this._totalAssets
@@ -57,6 +58,10 @@ export default {
       set(v) {
         this.setTotalAssets(v)
       }
+    },
+
+    year() {
+      return this.initYear + this.choices.length
     }
   },
 
@@ -135,7 +140,7 @@ export default {
       )
       this.choices.push(target)
       this.chartData.datasets[2].data = this.assets
-      this.$refs.chart.redraw()
+      if (this.$refs.chart) this.$refs.chart.redraw()
       if (this.assets[i + 1] > 10000000) this.goal()
     },
 
@@ -171,6 +176,12 @@ export default {
       this.chartData.datasets[1].data = assets
       this.chartData.labels = labels
     }
+  },
+
+  mounted() {
+    return
+    this.choose('台股')
+    this.setPageShown('FIndReport')
   }
 }
 </script>
@@ -190,13 +201,13 @@ export default {
 .input
   margin-bottom: .2em
 
-.ui.statistics
-  justify-content: center
+.-initialized
+  text-align: center
 
-  .statistic
-    text-align: center
-    > .value
-      font-size: 2rem !important
+.ui.statistic
+  margin-top: 0
+  > .value
+    font-size: 2rem !important
 
 p
   text-align: center
