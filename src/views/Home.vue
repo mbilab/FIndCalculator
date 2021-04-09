@@ -2,7 +2,7 @@
 .-home
   .-container
     FIndCalculator
-    FIndReport
+    //FIndReport
   .-rail
 </template>
 
@@ -19,3 +19,5 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="sass"></style>

@@ -1,7 +1,7 @@
 <template lang="pug">
 #app
   .-header
-    h2.ui.header 智能帳房
+    h2.ui.header Moore
     .-nav-links
       router-link(to="/") Home
       // router-link(to="/about") About
@@ -15,38 +15,29 @@ export default {}
 
 <style lang="sass">
 @import "./assets/variables.sass"
-$headerheight: 3em
+$header-height: 3rem
 
 #app
   // font-family: Avenir, Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
-  text-align: center
-  color: #2c3e50
+  //! text-align: center
+  //! color: #2c3e50
 
-#nav
-  padding: 30px
-
-  a
-    font-weight: bold
-    color: #2c3e50
-
-    &.router-link-exact-active
-      color: #42b983
 .-header
+  background-color: white
+  border-bottom: 1px solid rgba(34, 36, 38, 0.15)
+  display: flex
+  height: $header-height
+  justify-content: space-between
   position: fixed
   top: 0
-  background-color: white
-  height: $headerheight
   width: 100%
-  display: flex
-  justify-content: space-between
   z-index: 100
-  border-bottom: 1px solid rgba(34, 36, 38, 0.15)
 
 .ui.header
-  line-height: 2em
-  padding: 0 1em
+  line-height: $header-height
+  padding: 0 1rem
 
 .-nav-links
   display: flex
@@ -55,5 +46,7 @@ $headerheight: 3em
     padding: 0 1em
 
 .-body
-  margin-top: $headerheight
+  height: 100vh
+  padding-top: $header-height
+  overflow: hidden
 </style>
