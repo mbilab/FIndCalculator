@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "chart.js": "2",
+    "chartjs-plugin-colorschemes": "^0.4.0",
     "core-js": "^3.6.5",
     "gaussian": "^1.2.0",
     "semantic-ui-offline": "2.4.1",

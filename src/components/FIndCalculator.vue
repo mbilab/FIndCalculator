@@ -58,25 +58,16 @@ export default {
     return {
       chartData: {
         labels: [],
-        datasets: [{ label: '1', data: [] }],
-        _labels: [
-          'January',
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-          'July'
-        ],
-        _datasets: [
-          {
-            label: 'Data One',
-            backgroundColor: '#f87979',
-            data: [40, 39, 10, 40, 39, 80, 40]
-          }
+        datasets: [
+          { label: '存入金額', data: [] },
+          { label: '總資產', data: [] }
         ]
       },
-      chartOptions: { responsive: true, maintainAspectRatio: false },
+      chartOptions: {
+        maintainAspectRatio: false,
+        plugins: { colorschemes: { scheme: 'brewer.YlOrRd3' } },
+        responsive: true
+      },
       initAsset: 0,
       initialized: true,
       initYear: 2000,
@@ -153,7 +144,8 @@ export default {
         assets.push(asset)
         labels.push(labels[i] + 1)
       }
-      this.chartData.datasets[0].data = assets
+      this.chartData.datasets[0].data = activeAssets
+      this.chartData.datasets[1].data = assets
       this.chartData.labels = labels
       console.log(assets)
     }
