@@ -8,6 +8,6 @@ export default new Vuex.Store({
     setTotalAssets: (state, v) => (state.totalAssets = v)
   },
   state: {
-    _totalAssets: 9000000
+    _totalAssets: 0
   }
 })

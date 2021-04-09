@@ -19,13 +19,19 @@
 
   .ui.statistics(v-if="initialized")
     .statistic
-      .value 5,550
+      .value {{ asset }}
       .label 總資產
     .statistic
-      .value 2000
+      .value {{ initYear + choices.length }}
       .label 現在時間
 
-  line-chart(v-if="initialized" :chartdata="chartData" :options="chartOptions")
+  br
+  .ui.basic.fluid.buttons(v-if="initialized")
+    button.ui.button(@click='choose("台股")') 台股
+    button.ui.button(@click='choose("美股")') 美股
+    button.ui.button(@click='choose("債券")') 債券
+
+  line-chart(v-if="initialized" :chartdata="chartData" :options="chartOptions" ref="chart")
 
   button.ui.button(v-if="initialized" @click='goal') Goal!
 
@@ -56,6 +62,7 @@ export default {
 
   data() {
     return {
+      asset: 0,
       chartData: {
         labels: [],
         datasets: [
@@ -69,8 +76,9 @@ export default {
         plugins: { colorschemes: { scheme: 'brewer.YlOrRd3' } },
         responsive: true
       },
+      choices: [],
       initAsset: 0,
-      initialized: true,
+      initialized: false,
       initYear: 2000,
       monthlyDeposit: 30000,
       monthlySpending: 50000,
@@ -81,46 +89,20 @@ export default {
   mounted() {
     this.plotPlan()
 
-    let historicalProfits = [
-      { 台股: 0.23, 美股: 0.16, 美債: 0.08 },
-      { 台股: 0.23, 美股: 0.29, 美債: 0.05 },
-      { 台股: -0.09, 美股: -0.06, 美債: -0.02 },
-      { 台股: 0.15, 美股: 0.2, 美債: 0.0 },
-      { 台股: 0.11, 美股: 0.1, 美債: -0.01 },
-      { 台股: -0.1, 美股: -0.01, 美債: -0.01 },
-      { 台股: 0.08, 美股: 0.11, 美債: 0.03 },
-      { 台股: 0.12, 美股: 0.3, 美債: -0.07 },
-      { 台股: 0.09, 美股: 0.13, 美債: 0.01 },
-      { 台股: -0.21, 美股: 0.0, 美債: 0.09 },
-      { 台股: 0.1, 美股: 0.13, 美債: 0.04 },
-      { 台股: 0.78, 美股: 0.23, 美債: -0.08 },
-      { 台股: -0.46, 美股: -0.39, 美債: 0.11 },
-      { 台股: 0.09, 美股: 0.03, 美債: 0.06 },
-      { 台股: 0.19, 美股: 0.14, 美債: -0.02 },
-      { 台股: 0.07, 美股: 0.03, 美債: -0.02 },
-      { 台股: 0.04, 美股: 0.09, 美債: 0.0 },
-      { 台股: 0.04, 美股: 0.26, 美債: -0.02 },
-      { 台股: 0.04, 美股: -0.24, 美債: 0.09 },
-      { 台股: 0.04, 美股: -0.14, 美債: 0.0 },
-      { 台股: 0.04, 美股: -0.09, 美債: 0.09 }
-    ]
-    let activeAssets = [this.initAsset]
-    let assets = [this.initAsset]
-    let choices = ['台股', '美股', '美債', '台股', '美股', '美債']
-    choices.forEach((c, i) => {
-      let profit = gaussian(historicalProfits[i][c], 0.01 ** 2).random(1)[0]
-      let yearDeposit = this.monthlyDeposit * 12
-      activeAssets.push(activeAssets[i] + yearDeposit)
-      assets.push(Math.floor((assets[i] + yearDeposit) * (1 + profit)))
-    })
-    this.chartData.datasets[2].data = assets
+    this.choices.push('台股', '美股', '債券')
+    this.plotAsset()
   },
 
   methods: {
     ...mapMutations(['setTotalAssets']),
 
+    choose(target) {
+      this.choices.push(target)
+      this.plotAsset()
+      if (this.asset > 10000000) this.goal()
+    },
+
     goal() {
-      this.totalAssets += 1000000
       Swal.fire({
         title: '發大財！',
         text: '一起走向財富自由',
@@ -130,6 +112,43 @@ export default {
         imageHeight: 183,
         imageAlt: 'Custom image'
       })
+    },
+
+    plotAsset() {
+      let historicalProfits = [
+        { 台股: 0.23, 美股: 0.16, 債券: 0.08 },
+        { 台股: 0.23, 美股: 0.29, 債券: 0.05 },
+        { 台股: -0.09, 美股: -0.06, 債券: -0.02 },
+        { 台股: 0.15, 美股: 0.2, 債券: 0.0 },
+        { 台股: 0.11, 美股: 0.1, 債券: -0.01 },
+        { 台股: -0.1, 美股: -0.01, 債券: -0.01 },
+        { 台股: 0.08, 美股: 0.11, 債券: 0.03 },
+        { 台股: 0.12, 美股: 0.3, 債券: -0.07 },
+        { 台股: 0.09, 美股: 0.13, 債券: 0.01 },
+        { 台股: -0.21, 美股: 0.0, 債券: 0.09 },
+        { 台股: 0.1, 美股: 0.13, 債券: 0.04 },
+        { 台股: 0.78, 美股: 0.23, 債券: -0.08 },
+        { 台股: -0.46, 美股: -0.39, 債券: 0.11 },
+        { 台股: 0.09, 美股: 0.03, 債券: 0.06 },
+        { 台股: 0.19, 美股: 0.14, 債券: -0.02 },
+        { 台股: 0.07, 美股: 0.03, 債券: -0.02 },
+        { 台股: 0.04, 美股: 0.09, 債券: 0.0 },
+        { 台股: 0.04, 美股: 0.26, 債券: -0.02 },
+        { 台股: 0.04, 美股: -0.24, 債券: 0.09 },
+        { 台股: 0.04, 美股: -0.14, 債券: 0.0 },
+        { 台股: 0.04, 美股: -0.09, 債券: 0.09 }
+      ]
+      let activeAssets = [this.initAsset]
+      let assets = [this.initAsset]
+      this.choices.forEach((c, i) => {
+        let profit = gaussian(historicalProfits[i][c], 0.01 ** 2).random(1)[0]
+        let yearDeposit = this.monthlyDeposit * 12
+        activeAssets.push(activeAssets[i] + yearDeposit)
+        assets.push(Math.floor((assets[i] + yearDeposit) * (1 + profit)))
+      })
+      this.chartData.datasets[2].data = assets
+      this.$refs.chart.redraw()
+      this.asset = assets[assets.length - 1]
     },
 
     plotPlan() {
