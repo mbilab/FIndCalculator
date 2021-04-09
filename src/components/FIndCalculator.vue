@@ -17,6 +17,8 @@
     br(v-if="!initialized")
     button.ui.fluid.primary.button(v-if="!initialized" @click='initialized = true') Go!
 
+  .ui.divider(v-if="initialized")
+
   .ui.statistics(v-if="initialized")
     .statistic
       .value {{ assets[assets.length - 1] }}
@@ -25,13 +27,16 @@
       .value {{ initYear + choices.length }}
       .label 現在時間
 
-  br
+  br(v-if="initialized")
+  p(v-if="initialized") 今年想要投資什麼嗎？
   .ui.basic.fluid.buttons(v-if="initialized")
     button.ui.button(@click='choose("台股")') 台股
     button.ui.button(@click='choose("美股")') 美股
     button.ui.button(@click='choose("債券")') 債券
 
-  line-chart(v-if="initialized" :chartdata="chartData" :options="chartOptions" ref="chart")
+  .ui.divider(v-if="initialized")
+
+  line-chart(v-if="initialized" :chartdata="chartData" :height="250" :options="chartOptions" ref="chart")
 
 </template>
 
@@ -72,11 +77,22 @@ export default {
       chartOptions: {
         maintainAspectRatio: false,
         plugins: { colorschemes: { scheme: 'brewer.YlOrRd3' } },
-        responsive: true
+        responsive: true,
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                callback: function(value, index, values) {
+                  return Math.floor(value / 10000) + 'W'
+                }
+              }
+            }
+          ]
+        }
       },
       choices: [],
       initAsset: 0,
-      initialized: true,
+      initialized: false,
       initYear: 2000,
       monthlyDeposit: 30000,
       monthlySpending: 50000,
@@ -86,9 +102,9 @@ export default {
 
   mounted() {
     this.plotPlan()
-    this.choose('台股')
-    this.choose('美股')
-    this.choose('債券')
+    // this.choose('台股')
+    // this.choose('美股')
+    // this.choose('債券')
   },
 
   methods: {
@@ -132,13 +148,12 @@ export default {
 
     goal() {
       Swal.fire({
-        title: '發大財！',
-        text: '一起走向財富自由',
+        imageHeight: 183,
         imageUrl:
           'https://img.ltn.com.tw/Upload/news/600/2018/11/23/phpbTcO8E.jpg',
         imageWidth: 275,
-        imageHeight: 183,
-        imageAlt: 'Custom image'
+        text: this.initYear + this.choices.length + ' 年，財富自由啦！',
+        title: '發大財！'
       })
     },
 
@@ -178,8 +193,6 @@ export default {
   justify-content: center
   margin-top: 1em
   margin-bottom: 1em
-  &.-initialized
-    display: inherit
 
 .input
   margin-bottom: .2em
@@ -189,4 +202,7 @@ export default {
 
 .ui .statistic > .value
   font-size: 2rem !important
+
+p
+  text-align: center
 </style>

@@ -2,7 +2,7 @@
 #app
   .-header
     h2.ui.header Moore
-    .-nav-links
+    //.-nav-links
       router-link(to="/") Home
       router-link(to="/report") Report
   router-view.-body
