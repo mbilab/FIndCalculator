@@ -12,11 +12,13 @@
       input(tyue="number" :value="monthlySpending" placeholder="500000")
 
   line-chart(:chartdata="chartData" :options="chartOptions")
+  button.ui.button(@click='find') FInd!
 
 </template>
 
 <script>
 import LineChart from './LineChart.js'
+import Swal from 'sweetalert2'
 
 export default {
   name: 'FIndCalculator',
@@ -89,6 +91,19 @@ export default {
       )
       console.log(activeAssets, assets)
     })
+  },
+  methods: {
+    find() {
+      Swal.fire({
+        title: '發大財！',
+        text: '一起走向財富自由',
+        imageUrl:
+          'https://img.ltn.com.tw/Upload/news/600/2018/11/23/phpbTcO8E.jpg',
+        imageWidth: 275,
+        imageHeight: 183,
+        imageAlt: 'Custom image'
+      })
+    }
   }
 }
 </script>
