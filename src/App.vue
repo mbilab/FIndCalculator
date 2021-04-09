@@ -35,7 +35,7 @@ $header-height: 3rem
   width: 100%
   z-index: 100
 
-.ui.header
+.-header > .ui.header
   line-height: $header-height
   padding: 0 1rem
 

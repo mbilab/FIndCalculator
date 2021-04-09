@@ -1,17 +1,23 @@
 <template lang="pug">
-.-calculator.ui.container.segment
+.-calculator.ui.container.segment(:class="{ '-initialized': initialized }")
+
+  h2.ui.header(v-if="!initialized") 歡迎來到 Moore，幫助您實現財富自由的好夥伴，輸入後開始體驗吧！
+
   .-form
-    .ui.fluid.labeled.input
+    br(v-if="!initialized")
+    .ui.fluid.labeled.input(:class="{ disabled: initialized }")
       .ui.label 初始資產
       input(type="number" :value="initAsset" placeholder="0")
-    .ui.fluid.labeled.input
+    .ui.fluid.labeled.input(:class="{ disabled: initialized }")
       .ui.label 每月存入
       input(tyue="number" :value="monthlyDeposit" placeholder="500000")
-    .ui.fluid.labeled.input
+    .ui.fluid.labeled.input(:class="{ disabled: initialized }")
       .ui.label 退休開支
       input(tyue="number" :value="monthlySpending" placeholder="500000")
+    br(v-if="!initialized")
+    button.ui.fluid.primary.button(v-if="!initialized" @click='initialized = true') Go!
 
-  .ui.statistics
+  .ui.statistics(v-if="initialized")
     .statistic
       .value 5,550
       .label 總資產
@@ -19,8 +25,9 @@
       .value 2000
       .label 現在時間
 
-  line-chart(:chartdata="chartData" :options="chartOptions")
-  button.ui.button(@click='goal') Goal!
+  line-chart(v-if="initialized" :chartdata="chartData" :options="chartOptions")
+
+  button.ui.button(v-if="initialized" @click='goal') Goal!
 
 </template>
 
@@ -46,6 +53,7 @@ export default {
       }
     }
   },
+
   data() {
     return {
       chartData: {
@@ -66,13 +74,15 @@ export default {
           }
         ]
       },
+      chartOptions: { responsive: true, maintainAspectRatio: false },
       initAsset: 0,
+      initialized: false,
       initYear: 2000,
       monthlyDeposit: 50000,
-      monthlySpending: 50000,
-      chartOptions: { responsive: true, maintainAspectRatio: false }
+      monthlySpending: 50000
     }
   },
+
   mounted() {
     let historicalProfits = [
       { 台股: 0.23, 美股: 0.16, 美債: 0.08 },
@@ -136,12 +146,16 @@ export default {
   flex-direction: column
 
 .ui.segment
+  display: flex
   height: calc(100vh - 5rem)
+  justify-content: center
   margin-top: 1em
   margin-bottom: 1em
+  &.-initialized
+    display: inherit
 
 .input
-  margin: .2em
+  margin-bottom: .2em
 
 .ui.statistics
   justify-content: center
