@@ -75,40 +75,33 @@ export default {
   },
   mounted() {
     let historicalProfits = [
-      {
-        台股: { mean: 0.1, stdev: 0.01 },
-        美股: { mean: 0.1, stdev: 0.01 },
-        美債: { mean: 0.1, stdev: 0.01 }
-      },
-      {
-        台股: { mean: 0.1, stdev: 0.01 },
-        美股: { mean: 0.2, stdev: 0.01 },
-        美債: { mean: 0.1, stdev: 0.01 }
-      },
-      {
-        台股: { mean: 0.1, stdev: 0.01 },
-        美股: { mean: 0.1, stdev: 0.01 },
-        美債: { mean: 0.1, stdev: 0.01 }
-      },
-      {
-        台股: { mean: 0.1, stdev: 0.01 },
-        美股: { mean: 0.1, stdev: 0.01 },
-        美債: { mean: 0.1, stdev: 0.01 }
-      },
-      {
-        台股: { mean: 0.1, stdev: 0.01 },
-        美股: { mean: 0.1, stdev: 0.01 },
-        美債: { mean: 0.1, stdev: 0.01 }
-      }
+      { 台股: 0.23, 美股: 0.16, 美債: 0.08 },
+      { 台股: 0.23, 美股: 0.29, 美債: 0.05 },
+      { 台股: -0.09, 美股: -0.06, 美債: -0.02 },
+      { 台股: 0.15, 美股: 0.2, 美債: 0.0 },
+      { 台股: 0.11, 美股: 0.1, 美債: -0.01 },
+      { 台股: -0.1, 美股: -0.01, 美債: -0.01 },
+      { 台股: 0.08, 美股: 0.11, 美債: 0.03 },
+      { 台股: 0.12, 美股: 0.3, 美債: -0.07 },
+      { 台股: 0.09, 美股: 0.13, 美債: 0.01 },
+      { 台股: -0.21, 美股: 0.0, 美債: 0.09 },
+      { 台股: 0.1, 美股: 0.13, 美債: 0.04 },
+      { 台股: 0.78, 美股: 0.23, 美債: -0.08 },
+      { 台股: -0.46, 美股: -0.39, 美債: 0.11 },
+      { 台股: 0.09, 美股: 0.03, 美債: 0.06 },
+      { 台股: 0.19, 美股: 0.14, 美債: -0.02 },
+      { 台股: 0.07, 美股: 0.03, 美債: -0.02 },
+      { 台股: 0.04, 美股: 0.09, 美債: 0.0 },
+      { 台股: 0.04, 美股: 0.26, 美債: -0.02 },
+      { 台股: 0.04, 美股: -0.24, 美債: 0.09 },
+      { 台股: 0.04, 美股: -0.14, 美債: 0.0 },
+      { 台股: 0.04, 美股: -0.09, 美債: 0.09 }
     ]
     let activeAssets = [this.initAsset]
     let assets = [this.initAsset]
     let choices = ['台股', '美股', '美債']
     choices.forEach((c, i) => {
-      let profit = gaussian(
-        historicalProfits[i][c].mean,
-        historicalProfits[i][c].stdev ** 2
-      ).random(1)[0]
+      let profit = gaussian(historicalProfits[i][c], 0.01 ** 2).random(1)[0]
       let yearDeposit = this.monthlyDeposit * 12
       activeAssets.push(activeAssets[i] + yearDeposit)
       assets.push(Math.floor((assets[i] + yearDeposit) * (1 + profit)))
