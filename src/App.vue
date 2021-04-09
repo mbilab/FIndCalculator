@@ -10,12 +10,11 @@
 <script>
 import 'semantic-ui-offline/semantic.css'
 import FIndCalculator from '@/components/FIndCalculator.vue'
+import { mapState } from 'vuex'
 
 export default {
-  data() {
-    return {
-      pageShown: 'claculator'
-    }
+  computed: {
+    ...mapState(['pageShown'])
   },
   components: {
     FIndCalculator,

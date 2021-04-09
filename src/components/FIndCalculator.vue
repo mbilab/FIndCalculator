@@ -1,28 +1,28 @@
 <template lang="pug">
 .-calculator.ui.container.segment(:class="{ '-initialized': initialized }")
 
-  h2.ui.header(v-if="!initialized") 歡迎來到 Moore，幫助您實現財富自由的好夥伴，輸入後開始體驗吧！
+  h2.ui.header(v-show="!initialized") 歡迎來到 Moore，幫助您實現財富自由的好夥伴，輸入後開始體驗吧！
   br(v-if="!initialized")
 
   .ui.fluid.labeled.input(:class="{ disabled: initialized }")
     .ui.label 初始資產
-    input(type="number" :value="initAsset" placeholder="0")
+    input(type="number" v-model.number="initAsset")
   .ui.fluid.labeled.input(:class="{ disabled: initialized }")
     .ui.label 每月存入
-    input(tyue="number" :value="monthlyDeposit" placeholder="500000")
+    input(type="number" v-model.number="monthlyDeposit")
   .ui.fluid.labeled.input(:class="{ disabled: initialized }")
     .ui.label 退休開支
-    input(tyue="number" :value="monthlySpending" placeholder="500000")
+    input(type="number" v-model.number="monthlySpending")
   br(v-if="!initialized")
-  button.ui.fluid.primary.button(v-if="!initialized" @click='initialized = true') Go!
+  button.ui.fluid.primary.button(v-if="!initialized" @click='plotPlan') Go!
 
   div(v-if="initialized")
     .ui.divider
     .ui.statistics
       .statistic
-        .value {{ assets[assets.length - 1] }}
+        .value {{ totalAssets }}
         .label 總資產
-        a 點擊查看
+        a(@click='setPageShown("report")') 點擊查看
       .statistic
         .value {{ initYear + choices.length }}
         .label 現在時間
@@ -97,15 +97,8 @@ export default {
     }
   },
 
-  mounted() {
-    this.plotPlan()
-    // this.choose('台股')
-    // this.choose('美股')
-    // this.choose('債券')
-  },
-
   methods: {
-    ...mapMutations(['setTotalAssets']),
+    ...mapMutations(['setTotalAssets', 'setPageShown']),
 
     choose(target) {
       let historicalProfits = [
@@ -137,6 +130,9 @@ export default {
       this.assets.push(
         Math.floor((this.assets[i] + yearDeposit) * (1 + profit))
       )
+      this.totalAssets = Math.floor(
+        (this.assets[i] + yearDeposit) * (1 + profit)
+      )
       this.choices.push(target)
       this.chartData.datasets[2].data = this.assets
       this.$refs.chart.redraw()
@@ -155,6 +151,10 @@ export default {
     },
 
     plotPlan() {
+      this.totalAssets = this.initAsset
+      this.assets[0] = this.initAsset
+      this.initialized = true
+
       let asset = this.initAsset
       let activeAssets = [asset]
       let assets = [asset]

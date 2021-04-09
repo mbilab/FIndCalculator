@@ -4,10 +4,12 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  mutation: {
-    setTotalAssets: (state, v) => (state.totalAssets = v)
+  mutations: {
+    setTotalAssets: (state, v) => (state._totalAssets = v),
+    setPageShown: (state, v) => (state.pageShown = v)
   },
   state: {
-    _totalAssets: 0
+    _totalAssets: 0,
+    pageShown: 'claculator'
   }
 })
