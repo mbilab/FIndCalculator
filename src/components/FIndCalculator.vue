@@ -59,8 +59,9 @@ export default {
       chartData: {
         labels: [],
         datasets: [
-          { label: '存入金額', data: [] },
-          { label: '總資產', data: [] }
+          { data: [], label: '存入金額' },
+          { data: [], label: '總資產' },
+          { data: [], fill: false, label: '實際狀況', type: 'line' }
         ]
       },
       chartOptions: {
@@ -105,14 +106,14 @@ export default {
     ]
     let activeAssets = [this.initAsset]
     let assets = [this.initAsset]
-    let choices = ['台股', '美股', '美債']
+    let choices = ['台股', '美股', '美債', '台股', '美股', '美債']
     choices.forEach((c, i) => {
       let profit = gaussian(historicalProfits[i][c], 0.01 ** 2).random(1)[0]
       let yearDeposit = this.monthlyDeposit * 12
       activeAssets.push(activeAssets[i] + yearDeposit)
       assets.push(Math.floor((assets[i] + yearDeposit) * (1 + profit)))
     })
-    console.log(activeAssets, assets)
+    this.chartData.datasets[2].data = assets
   },
 
   methods: {
@@ -147,7 +148,6 @@ export default {
       this.chartData.datasets[0].data = activeAssets
       this.chartData.datasets[1].data = assets
       this.chartData.labels = labels
-      console.log(assets)
     }
   }
 }
