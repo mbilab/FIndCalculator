@@ -1,7 +1,7 @@
 <template lang="pug">
 .-report
   .ui.container.segment
-    doughnut-chart(:chartdata='doughnutdata', :options='options')
+    doughnut-chart(v-if='doughnutLoaded', :chartdata='doughnutdata', :options='options')
     .-tables
       table.ui.celled.structured.table
         thead
@@ -9,7 +9,7 @@
             th(colspan='2')  資產
         tbody(v-for='(value, key) in assets')
           tr
-            td {{ key }}
+            td(@clck='this.assets[key]+=1000000') {{ key }}
             td {{ value }}
       table.ui.celled.structured.table
         thead
@@ -43,10 +43,22 @@ export default {
       set(v) {
         this.setTotalAssets(v)
       }
+    },
+    doughnutdata: {
+      get() {
+        return this.data
+      },
+      set(v) {
+        this.doughnutLoaded = false
+        this.data = Object.assign({}, this.data, v)
+        // Render doughnut at nextTick
+        this.$nextTick(() => (this.doughnutLoaded = true))
+      }
     }
   },
   data() {
     return {
+      doughnutLoaded: true,
       assets: {
         美股: 23423,
         台股: 23423,
@@ -59,16 +71,7 @@ export default {
         融資: 0
       },
 
-      doughnutdata: {
-        labels: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
-        datasets: [
-          {
-            label: 'Dataset 1',
-            data: [40, 10, 40, 39, 40],
-            backgroundColor: ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
-          }
-        ]
-      },
+      data: null,
       options: { responsive: true, maintainAspectRatio: false }
     }
   },
@@ -78,12 +81,23 @@ export default {
       let ratios = Array.from({ length: Object.keys(this.assets).length }, v =>
         Math.random()
       )
-      console.log('ratios')
-      console.log(ratios)
       let sum = ratios.reduce((l, r) => l + r, 0)
       for (let asset in this.assets) {
         this.assets[asset] =
           this.totalAssets * Number((ratios.pop() / sum).toFixed(1))
+      }
+
+      let datasets = [
+        {
+          label: 'Assets',
+          data: Object.values(this.assets),
+          backgroundColor: ['Orange', 'Yellow', 'Green']
+        }
+      ]
+
+      this.doughnutdata = {
+        labels: Object.keys(this.assets),
+        datasets: datasets
       }
     }
   }
