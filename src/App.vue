@@ -3,8 +3,10 @@
   .-header
     h2.ui.header Moore
   .-body
-    FIndCalculator(v-if='pageShown=="claculator"')
-    FIndReport(v-if='pageShown=="report"')
+    keep-alive
+      component(:is="pageShown")
+    // FIndCalculator(v-show='pageShown=="claculator"')
+    // FIndReport(v-if='pageShown=="report"')
 </template>
 
 <script>

@@ -1,6 +1,7 @@
 <template lang="pug">
 .-report
   .ui.container.segment
+    i.close.icon.right.floated(@click='setPageShown("FIndCalculator")')
     doughnut-chart(v-if='doughnutLoaded', :chartdata='doughnutdata', :options='options')
     .-tables
       table.ui.celled.structured.table
@@ -28,7 +29,7 @@ import DoughnutChart from './DoughnutChart.js'
 
 export default {
   name: 'FIndReport',
-  mounted() {
+  activated() {
     this.randomAssets()
   },
   components: {
@@ -76,15 +77,16 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setTotalAssets']),
+    ...mapMutations(['setTotalAssets', 'setPageShown']),
     randomAssets() {
       let ratios = Array.from({ length: Object.keys(this.assets).length }, v =>
         Math.random()
       )
       let sum = ratios.reduce((l, r) => l + r, 0)
       for (let asset in this.assets) {
-        this.assets[asset] =
+        this.assets[asset] = Math.round(
           this.totalAssets * Number((ratios.pop() / sum).toFixed(1))
+        )
       }
 
       let datasets = [
@@ -110,4 +112,8 @@ export default {
   align-items: flex-start
 .ui.table
   margin-top: 1em
+.right.floated
+  position: absolute
+  top:  1em
+  right: 1em
 </style>

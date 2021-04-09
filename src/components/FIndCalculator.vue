@@ -22,7 +22,7 @@
       .statistic
         .value {{ totalAssets }}
         .label 總資產
-        a(@click='setPageShown("report")') 點擊查看
+        a(@click='setPageShown("FIndReport")') 點擊查看
       .statistic
         .value {{ initYear + choices.length }}
         .label 現在時間

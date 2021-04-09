@@ -10,6 +10,6 @@ export default new Vuex.Store({
   },
   state: {
     _totalAssets: 0,
-    pageShown: 'claculator'
+    pageShown: 'FIndCalculator'
   }
 })
