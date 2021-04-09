@@ -11,13 +11,22 @@
       .ui.label 退休開支
       input(tyue="number" :value="monthlySpending" placeholder="500000")
 
+  .ui.statistics
+    .statistic
+      .value 5,550
+      .label 總資產
+    .statistic
+      .value 2000
+      .label 現在時間
+
   line-chart(:chartdata="chartData" :options="chartOptions")
-  button.ui.button(@click='find') FInd!
+  button.ui.button(@click='goal') Goal!
 
 </template>
 
 <script>
-import LineChart from './LineChart.js'
+import gaussian from 'gaussian'
+import LineChart from './LineChart'
 import Swal from 'sweetalert2'
 import { mapState, mapMutations } from 'vuex'
 
@@ -96,17 +105,19 @@ export default {
     let assets = [this.initAsset]
     let choices = ['台股', '美股', '美債']
     choices.forEach((c, i) => {
+      let profit = gaussian(
+        historicalProfits[i][c].mean,
+        historicalProfits[i][c].stdev ** 2
+      ).random(1)[0]
       let yearDeposit = this.monthlyDeposit * 12
       activeAssets.push(activeAssets[i] + yearDeposit)
-      assets.push(
-        (assets[i] + yearDeposit) * (1 + historicalProfits[i][c].mean)
-      )
-      console.log(activeAssets, assets)
+      assets.push(Math.floor((assets[i] + yearDeposit) * (1 + profit)))
     })
+    console.log(activeAssets, assets)
   },
   methods: {
     ...mapMutations(['setTotalAssets']),
-    find() {
+    goal() {
       this.totalAssets += 1000000
       Swal.fire({
         title: '發大財！',
@@ -138,4 +149,10 @@ export default {
 
 .input
   margin: .2em
+
+.ui.statistics
+  justify-content: center
+
+.ui .statistic > .value
+  font-size: 2rem !important
 </style>
