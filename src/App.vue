@@ -29,7 +29,8 @@ $header-height: 3rem
   border-bottom: 1px solid rgba(34, 36, 38, 0.15)
   display: flex
   height: $header-height
-  justify-content: space-between
+  //justify-content: space-between
+  justify-content: center
   position: fixed
   top: 0
   width: 100%
@@ -48,5 +49,4 @@ $header-height: 3rem
 .-body
   height: 100vh
   padding-top: $header-height
-  overflow: auto
 </style>

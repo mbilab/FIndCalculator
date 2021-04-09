@@ -2,41 +2,38 @@
 .-calculator.ui.container.segment(:class="{ '-initialized': initialized }")
 
   h2.ui.header(v-if="!initialized") 歡迎來到 Moore，幫助您實現財富自由的好夥伴，輸入後開始體驗吧！
+  br(v-if="!initialized")
 
-  .-form
-    br(v-if="!initialized")
-    .ui.fluid.labeled.input(:class="{ disabled: initialized }")
-      .ui.label 初始資產
-      input(type="number" :value="initAsset" placeholder="0")
-    .ui.fluid.labeled.input(:class="{ disabled: initialized }")
-      .ui.label 每月存入
-      input(tyue="number" :value="monthlyDeposit" placeholder="500000")
-    .ui.fluid.labeled.input(:class="{ disabled: initialized }")
-      .ui.label 退休開支
-      input(tyue="number" :value="monthlySpending" placeholder="500000")
-    br(v-if="!initialized")
-    button.ui.fluid.primary.button(v-if="!initialized" @click='initialized = true') Go!
+  .ui.fluid.labeled.input(:class="{ disabled: initialized }")
+    .ui.label 初始資產
+    input(type="number" :value="initAsset" placeholder="0")
+  .ui.fluid.labeled.input(:class="{ disabled: initialized }")
+    .ui.label 每月存入
+    input(tyue="number" :value="monthlyDeposit" placeholder="500000")
+  .ui.fluid.labeled.input(:class="{ disabled: initialized }")
+    .ui.label 退休開支
+    input(tyue="number" :value="monthlySpending" placeholder="500000")
+  br(v-if="!initialized")
+  button.ui.fluid.primary.button(v-if="!initialized" @click='initialized = true') Go!
 
-  .ui.divider(v-if="initialized")
-
-  .ui.statistics(v-if="initialized")
-    .statistic
-      .value {{ assets[assets.length - 1] }}
-      .label 總資產
-    .statistic
-      .value {{ initYear + choices.length }}
-      .label 現在時間
-
-  br(v-if="initialized")
-  p(v-if="initialized") 今年想要投資什麼嗎？
-  .ui.basic.fluid.buttons(v-if="initialized")
-    button.ui.button(@click='choose("台股")') 台股
-    button.ui.button(@click='choose("美股")') 美股
-    button.ui.button(@click='choose("債券")') 債券
-
-  .ui.divider(v-if="initialized")
-
-  line-chart(v-if="initialized" :chartdata="chartData" :height="250" :options="chartOptions" ref="chart")
+  div(v-if="initialized")
+    .ui.divider
+    .ui.statistics
+      .statistic
+        .value {{ assets[assets.length - 1] }}
+        .label 總資產
+        a 點擊查看
+      .statistic
+        .value {{ initYear + choices.length }}
+        .label 現在時間
+        | 想要投資什麼嗎？
+    br
+    .ui.basic.fluid.tiny.buttons
+      button.ui.button(@click='choose("台股")') 台股
+      button.ui.button(@click='choose("美股")') 美股
+      button.ui.button(@click='choose("債券")') 債券
+    .ui.divider
+    line-chart(:chartdata="chartData" :height="250" :options="chartOptions" ref="chart")
 
 </template>
 
@@ -69,7 +66,7 @@ export default {
       chartData: {
         labels: [],
         datasets: [
-          { data: [], label: '存入金額' },
+          { data: [], label: '存入' },
           { data: [], label: '總資產' },
           { data: [], fill: false, label: '實際狀況', type: 'line' }
         ]
@@ -152,7 +149,7 @@ export default {
         imageUrl:
           'https://img.ltn.com.tw/Upload/news/600/2018/11/23/phpbTcO8E.jpg',
         imageWidth: 275,
-        text: this.initYear + this.choices.length + ' 年，財富自由啦！',
+        text: this.initYear + this.choices.length + ' 年，一起邁向財富自由。',
         title: '發大財！'
       })
     },
@@ -183,10 +180,6 @@ export default {
   display: flex
   flex-direction: column
 
-.-form
-  max-width: 25em !important
-  flex-direction: column
-
 .ui.segment
   display: flex
   height: calc(100vh - 5rem)
@@ -200,8 +193,10 @@ export default {
 .ui.statistics
   justify-content: center
 
-.ui .statistic > .value
-  font-size: 2rem !important
+  .statistic
+    text-align: center
+    > .value
+      font-size: 2rem !important
 
 p
   text-align: center
