@@ -57,7 +57,9 @@ export default {
   data() {
     return {
       chartData: {
-        labels: [
+        labels: [],
+        datasets: [{ label: '1', data: [] }],
+        _labels: [
           'January',
           'February',
           'March',
@@ -66,7 +68,7 @@ export default {
           'June',
           'July'
         ],
-        datasets: [
+        _datasets: [
           {
             label: 'Data One',
             backgroundColor: '#f87979',
@@ -76,14 +78,17 @@ export default {
       },
       chartOptions: { responsive: true, maintainAspectRatio: false },
       initAsset: 0,
-      initialized: false,
+      initialized: true,
       initYear: 2000,
-      monthlyDeposit: 50000,
-      monthlySpending: 50000
+      monthlyDeposit: 30000,
+      monthlySpending: 50000,
+      targetAsset: 10000000
     }
   },
 
   mounted() {
+    this.plotPlan()
+
     let historicalProfits = [
       { 台股: 0.23, 美股: 0.16, 美債: 0.08 },
       { 台股: 0.23, 美股: 0.29, 美債: 0.05 },
@@ -118,8 +123,10 @@ export default {
     })
     console.log(activeAssets, assets)
   },
+
   methods: {
     ...mapMutations(['setTotalAssets']),
+
     goal() {
       this.totalAssets += 1000000
       Swal.fire({
@@ -131,6 +138,24 @@ export default {
         imageHeight: 183,
         imageAlt: 'Custom image'
       })
+    },
+
+    plotPlan() {
+      let asset = this.initAsset
+      let activeAssets = [asset]
+      let assets = [asset]
+      let labels = [this.initYear]
+      let profit = 0.1
+      for (let i = 0; asset < this.targetAsset; ++i) {
+        let yearDeposit = this.monthlyDeposit * 12
+        activeAssets.push(activeAssets[i] + yearDeposit)
+        asset = Math.floor((assets[i] + yearDeposit) * (1 + profit))
+        assets.push(asset)
+        labels.push(labels[i] + 1)
+      }
+      this.chartData.datasets[0].data = assets
+      this.chartData.labels = labels
+      console.log(assets)
     }
   }
 }
