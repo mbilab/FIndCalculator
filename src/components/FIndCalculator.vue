@@ -1,7 +1,7 @@
 <template lang="pug">
 .-calculator.ui.container.segment
 
-  h2.ui.header(v-show="!initialized") 歡迎來到 Moore，幫助您實現財富自由的好夥伴，輸入後開始體驗吧！
+  h2.ui.header(v-show="!initialized") 歡迎來到 MOORE，幫您實現財富自由的好夥伴，立刻開始體驗吧！
   br(v-if="!initialized")
 
   .ui.fluid.labeled.input(:class="{ disabled: initialized }")
@@ -21,7 +21,7 @@
     .ui.statistic(v-if="choices.length" @click='setPageShown("FIndReport")')
       .value: a {{ totalAssets }}
       .label: a
-        i.search.icon
+        i.pie.chart.icon
         | 總資產
     .ui.statistic(v-else)
       .value {{ totalAssets }}
@@ -39,8 +39,9 @@
 
 <script>
 import gaussian from 'gaussian'
-import LineChart from './LineChart'
 import Swal from 'sweetalert2'
+
+import LineChart from './LineChart'
 import { mapState, mapMutations } from 'vuex'
 
 export default {
@@ -71,9 +72,9 @@ export default {
       chartData: {
         labels: [],
         datasets: [
-          { data: [], label: '存入' },
-          { data: [], label: '總資產' },
-          { data: [], fill: false, label: '實際狀況', type: 'line' }
+          { data: [], label: '目標存入' },
+          { data: [], label: '目標資產' },
+          { data: [], fill: false, label: '實際', type: 'line' }
         ]
       },
       chartOptions: {

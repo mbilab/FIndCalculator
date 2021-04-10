@@ -1,7 +1,7 @@
 <template lang="pug">
 #app
   .-header
-    h2.ui.header Moore
+    h2.ui.header MOORE
   .-body
     keep-alive
       component(:is="pageShown")
@@ -28,6 +28,10 @@ export default {
 <style lang="sass">
 @import "./assets/variables.sass"
 $header-height: 3rem
+
+body
+  overflow: hidden
+  width: 100vw
 
 #app
   // font-family: Avenir, Helvetica, Arial, sans-serif

@@ -9,7 +9,7 @@ module.exports = {
   pages: {
     index: {
       entry: 'src/main.js',
-      title: 'Moore'
+      title: 'MOORE'
     }
   },
   publicPath: './'

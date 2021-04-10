@@ -12,7 +12,8 @@
 
     .-tables
       table.ui.celled.compact.small.unstackable.table
-        thead: tr: th(colspan='2') 資產
+        thead(@click='reportAsset'): tr: th(colspan='2'): a 資產
+          i.file.alternate.outline.icon
         tbody
           tr(v-for='(value, key) in assets')
             td {{ key }}
@@ -22,7 +23,8 @@
             th 合計
             th {{ totalAssets + 802605 }}
       table.ui.celled.compact.small.unstackable.table
-        thead: tr: th(colspan='2') 負債
+        thead(@click='reportDebt'): tr: th(colspan='2'): a 負債
+          i.file.alternate.outline.icon
         tbody
           tr(v-for='d in debt')
             td {{ d.name }}
@@ -34,11 +36,29 @@
           tr
             th 合計
             th 802605
+
+  #asset-report-template
+    swal-title 資產面
+    swal-html: .-report-template
+      h3.ui.header 近半年
+      p 平均收入 56,000，波動度 3%，繼續保持 #[i.heart.outline.icon]
+      h3.ui.header 未來半年
+      p 企業獲利正在逐步回到正常，應趁避險基金被迫賣股，股市不理性下跌時，買進基本面持續轉好的股市。
+
+  #debt-report-template
+    swal-title 負債面
+    swal-html: .-report-template
+      h3.ui.header 近半年
+      p 平均支出 26,000，波動度 20%，記得穩定支出喔 #[i.meh.outline.icon]
+      h3.ui.header 未來半年
+      p 學期快開始了，小孩的學費也是一筆開銷，依據往年的記錄，建議預留 200,000 左右的資金。
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import Swal from 'sweetalert2'
+
 import DoughnutChart from './DoughnutChart.js'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'FIndReport',
@@ -102,6 +122,7 @@ export default {
 
   methods: {
     ...mapMutations(['setTotalAssets', 'setPageShown']),
+
     randomAssets() {
       let assets = Object.keys(this.assets).map(v => Math.random())
       let sum = assets.reduce((a, c) => a + c, 0)
@@ -121,6 +142,14 @@ export default {
         labels: Object.keys(this.assets),
         datasets: datasets
       }
+    },
+
+    reportAsset() {
+      Swal.fire({ template: '#asset-report-template' })
+    },
+
+    reportDebt() {
+      Swal.fire({ template: '#debt-report-template' })
     }
   }
 }
@@ -156,9 +185,9 @@ export default {
 .ui.table
   margin-bottom: 0
   margin-top: 1em
+</style>
 
-.right.floated
-  position: absolute
-  top:  1em
-  right: 1em
+<style lang="sass">
+.-report-template
+  text-align: left
 </style>
