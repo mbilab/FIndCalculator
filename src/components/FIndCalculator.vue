@@ -33,7 +33,7 @@
       button.ui.button(@click='choose("美股")') 美股
       button.ui.button(@click='choose("債券")') 債券
     .ui.divider
-    line-chart(:chartdata="chartData" :height="250" :options="chartOptions" ref="chart")
+    line-chart(:chart-data="chartData" :height="250" :options="chartOptions" ref="chart")
 
 </template>
 
@@ -68,13 +68,12 @@ export default {
 
   data() {
     return {
-      assets: [0],
       chartData: {
         labels: [],
         datasets: [
           { data: [], label: '目標存入' },
           { data: [], label: '目標資產' },
-          { data: [], fill: false, label: '實際', type: 'line' }
+          { data: [0], fill: false, label: '實際', type: 'line' }
         ]
       },
       chartOptions: {
@@ -130,19 +129,15 @@ export default {
         { 台股: 0.04, 美股: -0.14, 債券: 0.0 },
         { 台股: 0.04, 美股: -0.09, 債券: 0.09 }
       ]
+      let assets = this.chartData.datasets[2].data
       let i = this.choices.length
       let profit = gaussian(historicalProfits[i][target], 0.1 ** 2).random(1)[0]
       let yearDeposit = this.monthlyDeposit * 12
-      this.assets.push(
-        Math.floor((this.assets[i] + yearDeposit) * (1 + profit))
-      )
-      this.totalAssets = Math.floor(
-        (this.assets[i] + yearDeposit) * (1 + profit)
-      )
+      assets.push(Math.floor((assets[i] + yearDeposit) * (1 + profit)))
+      this.totalAssets = assets[i + 1]
       this.choices.push(target)
-      this.chartData.datasets[2].data = this.assets
-      if (this.$refs.chart) this.$refs.chart.redraw()
-      if (this.assets[i + 1] > 10000000) this.goal()
+      this.chartData = { ...this.chartData } // trigger re-draw
+      if (assets[i + 1] > 10000000) this.goal()
     },
 
     goal() {
@@ -157,8 +152,8 @@ export default {
     },
 
     plotPlan() {
+      this.chartData.datasets[2].data[0] = this.initAsset
       this.totalAssets = this.initAsset
-      this.assets[0] = this.initAsset
       this.initialized = true
 
       let asset = this.initAsset
