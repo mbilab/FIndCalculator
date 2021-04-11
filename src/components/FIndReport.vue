@@ -69,9 +69,7 @@ export default {
       this.chartHeight = this.$refs.chart.clientHeight
     })
   },
-  components: {
-    DoughnutChart
-  },
+  components: { DoughnutChart },
   computed: {
     ...mapState(['_totalAssets']),
 
