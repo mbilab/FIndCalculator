@@ -8,8 +8,8 @@
         | 總資產
     .ui.divider
 
-    .-doughnut(ref='chartContainer')
-      doughnut-chart(v-if='doughnutLoaded' :chartdata='chartData' :options='chartOptions' :style='chartStyle')
+    .-chart(ref='chart')
+      doughnut-chart(v-if='doughnutLoaded' :chartdata='chartData' :options='chartOptions' :style='{ height: chartHeight + "px" }')
 
     .-tables
       table.ui.celled.compact.small.unstackable.table
@@ -66,7 +66,7 @@ export default {
   activated() {
     this.randomAssets()
     this.$nextTick(() => {
-      this.containerHeight = this.$refs.chartContainer.clientHeight
+      this.chartHeight = this.$refs.chart.clientHeight
     })
   },
   components: {
@@ -94,13 +94,6 @@ export default {
         // Render doughnut at nextTick
         this.$nextTick(() => (this.doughnutLoaded = true))
       }
-    },
-
-    chartStyle() {
-      return {
-        height: this.containerHeight + 'px',
-        position: 'relative'
-      }
     }
   },
 
@@ -114,21 +107,19 @@ export default {
         債券: 0,
         自設資產: 0
       },
-
-      debt: [
-        { name: '貸款', value: 800000 },
-        { name: '信用卡款', value: 2605 },
-        { name: '融資借款', value: '-' },
-        { name: '自設負債', value: '-' }
-      ],
-
-      data: null,
+      chartHeight: 200,
       chartOptions: {
         maintainAspectRatio: false,
         plugins: { colorschemes: { scheme: 'brewer.PastelOne6' } },
         responsive: true
       },
-      containerHeight: 200
+      data: null,
+      debt: [
+        { name: '貸款', value: 800000 },
+        { name: '信用卡款', value: 2605 },
+        { name: '融資借款', value: '-' },
+        { name: '自設負債', value: '-' }
+      ]
     }
   },
 
@@ -176,6 +167,10 @@ export default {
   margin-top: 1em
   text-align: center
 
+.-chart
+  flex: 1 1 auto
+  position: relative
+
 .-tables
   display: flex
   align-items: flex-start
@@ -202,7 +197,4 @@ export default {
 <style lang="sass">
 .-report-template
   text-align: left
-.-doughnut
-  flex: 1 1 auto
-  position: relative
 </style>

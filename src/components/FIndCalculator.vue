@@ -34,8 +34,8 @@
       button.ui.button(@click='choose("債券")') 債券
     .ui.divider
 
-  .-chart(v-if="initialized" ref='chartContainer')
-    line-chart(:chart-data="chartData" :options="chartOptions" ref="chart" :style='chartStyle' )
+  .-chart(v-if='initialized' ref='chart')
+    line-chart(:chart-data="chartData" :options='chartOptions' :style='{ height: chartHeight + "px" }')
 
 </template>
 
@@ -65,13 +65,6 @@ export default {
 
     year() {
       return this.initYear + this.choices.length
-    },
-
-    chartStyle() {
-      return {
-        height: this.containerHeight + 'px',
-        position: 'relative'
-      }
     }
   },
 
@@ -103,14 +96,14 @@ export default {
           ]
         }
       },
+      chartHeight: 250,
       choices: [],
       initAsset: 0,
       initialized: false,
       initYear: 2000,
       monthlyDeposit: 30000,
       monthlySpending: 50000,
-      targetAsset: 10000000,
-      containerHeight: 250
+      targetAsset: 10000000
     }
   },
 
@@ -191,7 +184,7 @@ export default {
       this.chartData.datasets[2].data = assets
       this.chartData.labels = labels
       this.$nextTick(() => {
-        this.containerHeight = this.$refs.chartContainer.clientHeight
+        this.chartHeight = this.$refs.chart.clientHeight
       })
     }
   },
