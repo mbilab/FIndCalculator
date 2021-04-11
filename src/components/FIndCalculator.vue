@@ -71,14 +71,16 @@ export default {
       chartData: {
         labels: [],
         datasets: [
+          { data: [0], fill: false, label: '實際', type: 'line' },
           { data: [], label: '目標存入' },
-          { data: [], label: '目標資產' },
-          { data: [0], fill: false, label: '實際', type: 'line' }
+          { data: [], label: '目標資產' }
         ]
       },
       chartOptions: {
         maintainAspectRatio: false,
-        plugins: { colorschemes: { scheme: 'brewer.YlOrRd3' } },
+        plugins: {
+          colorschemes: { reverse: true, scheme: 'brewer.OrRd4' }
+        },
         responsive: true,
         scales: {
           yAxes: [
@@ -129,9 +131,11 @@ export default {
         { 台股: 0.04, 美股: -0.14, 債券: 0.0 },
         { 台股: 0.04, 美股: -0.09, 債券: 0.09 }
       ]
-      let assets = this.chartData.datasets[2].data
+      let assets = this.chartData.datasets[0].data
       let i = this.choices.length
-      let profit = gaussian(historicalProfits[i][target], 0.1 ** 2).random(1)[0]
+      let profitMean =
+        i < historicalProfits.length ? historicalProfits[i][target] : 0.1
+      let profit = gaussian(profitMean, 0.1 ** 2).random(1)[0]
       let yearDeposit = this.monthlyDeposit * 12
       assets.push(Math.floor((assets[i] + yearDeposit) * (1 + profit)))
       this.totalAssets = assets[i + 1]
@@ -152,24 +156,29 @@ export default {
     },
 
     plotPlan() {
-      this.chartData.datasets[2].data[0] = this.initAsset
+      this.chartData.datasets[0].data[0] = this.initAsset
       this.totalAssets = this.initAsset
       this.initialized = true
 
-      let asset = this.initAsset
-      let activeAssets = [asset]
-      let assets = [asset]
+      let activeAssets = [this.initAsset]
+      let assets = [this.initAsset]
+      let i
       let labels = [this.initYear]
       let profit = 0.1
-      for (let i = 0; asset < this.targetAsset; ++i) {
+      for (i = 0; assets[i] < this.targetAsset; ++i) {
         let yearDeposit = this.monthlyDeposit * 12
         activeAssets.push(activeAssets[i] + yearDeposit)
-        asset = Math.floor((assets[i] + yearDeposit) * (1 + profit))
-        assets.push(asset)
+        assets.push(Math.floor((assets[i] + yearDeposit) * (1 + profit)))
         labels.push(labels[i] + 1)
       }
-      this.chartData.datasets[0].data = activeAssets
-      this.chartData.datasets[1].data = assets
+      for (let j = 0; j < 5; ++i, ++j) {
+        let yearSpending = this.monthlySpending * 12
+        activeAssets.push(activeAssets[i])
+        assets.push(Math.floor(assets[i] * (1 + 0.06)) - yearSpending)
+        labels.push(labels[i] + 1)
+      }
+      this.chartData.datasets[1].data = activeAssets
+      this.chartData.datasets[2].data = assets
       this.chartData.labels = labels
     }
   },
