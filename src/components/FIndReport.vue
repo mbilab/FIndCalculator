@@ -8,7 +8,8 @@
         | 總資產
     .ui.divider
 
-    doughnut-chart(v-if='doughnutLoaded' :chartdata='chartData' :height='200' :options='chartOptions')
+    .-doughnut(ref='chartContainer')
+      doughnut-chart(v-if='doughnutLoaded' :chartdata='chartData' :options='chartOptions' :style='chartStyle')
 
     .-tables
       table.ui.celled.compact.small.unstackable.table
@@ -64,6 +65,9 @@ export default {
   name: 'FIndReport',
   activated() {
     this.randomAssets()
+    this.$nextTick(() => {
+      this.containerHeight = this.$refs.chartContainer.clientHeight
+    })
   },
   components: {
     DoughnutChart
@@ -89,6 +93,13 @@ export default {
         this.data = Object.assign({}, this.data, v)
         // Render doughnut at nextTick
         this.$nextTick(() => (this.doughnutLoaded = true))
+      }
+    },
+
+    chartStyle() {
+      return {
+        height: this.containerHeight + 'px',
+        position: 'relative'
       }
     }
   },
@@ -116,7 +127,8 @@ export default {
         maintainAspectRatio: false,
         plugins: { colorschemes: { scheme: 'brewer.PastelOne6' } },
         responsive: true
-      }
+      },
+      containerHeight: 200
     }
   },
 
@@ -190,4 +202,7 @@ export default {
 <style lang="sass">
 .-report-template
   text-align: left
+.-doughnut
+  flex: 1 1 auto
+  position: relative
 </style>
