@@ -4,14 +4,14 @@
   h2.ui.header(v-show="!initialized") 歡迎來到 MOORE，幫您實現財富自由的好夥伴，立刻開始體驗吧！
   br(v-if="!initialized")
 
-  .ui.fluid.labeled.input(:class="{ disabled: initialized }")
-    .ui.label 初始資產
+  .ui.fluid.labeled.input(:class="{ disabled: initialized, mini: initialized }")
+    .ui.orange.label 初始資產
     input(type="number" v-model.number="initAsset")
-  .ui.fluid.labeled.input(:class="{ disabled: initialized }")
-    .ui.label 每月存入
+  .ui.fluid.labeled.input(:class="{ disabled: initialized, mini: initialized }")
+    .ui.orange.label 每月存入
     input(type="number" v-model.number="monthlyDeposit")
-  .ui.fluid.labeled.input(:class="{ disabled: initialized }")
-    .ui.label 退休開支
+  .ui.fluid.labeled.input(:class="{ disabled: initialized, mini: initialized }")
+    .ui.orange.label 退休開支
     input(type="number" v-model.number="monthlySpending")
   br(v-if="!initialized")
   button.ui.fluid.primary.button(v-if="!initialized" @click='plotPlan') Go!
