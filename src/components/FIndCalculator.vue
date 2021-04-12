@@ -16,14 +16,14 @@
 
   .-initialized(v-if='initialized')
     .ui.divider
-    .ui.statistic(v-if='choices.length' @click='setPageShown("FIndReport")')
+    .ui.statistic(v-if='choices.length' @click='setPage("FIndReport")')
       .value: a {{ totalAsset }}
       .label: a #[i.pie.chart.icon]總資產
     .ui.statistic(v-else)
       .value {{ totalAsset }}
       .label 總資產
     br
-    p 現在是 {{ year }} 年，想要投資什麼嗎？
+    p 現在是 {{ year }} 年，投資哪個方向好呢？
     .ui.basic.fluid.tiny.buttons
       button.ui.button(v-for='v in investTargets' @click='choose(v)') {{ v }}
     .ui.divider
@@ -92,7 +92,7 @@ export default {
           ]
         }
       },
-      chartHeight: 250,
+      chartHeight: 100,
       choices: [],
       initAsset: 0,
       initialized: false,
@@ -105,7 +105,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['setPageShown', 'setTotalAsset']),
+    ...mapMutations(['setPage', 'setTotalAsset']),
 
     choose(target) {
       let historicalProfits = [
@@ -194,6 +194,7 @@ export default {
       this.chartData.datasets[3].data = assets
       this.chartData.labels = labels
       this.$nextTick(() => {
+        console.log(this.$refs.chart.clientHeight)
         this.chartHeight = this.$refs.chart.clientHeight
       })
     }
@@ -202,7 +203,7 @@ export default {
   mounted() {
     return
     this.choose('台股')
-    this.setPageShown('FIndReport')
+    this.setPage('FIndReport')
   }
 }
 </script>
@@ -211,10 +212,9 @@ export default {
 .ui.container
   display: flex
   flex-direction: column
-  height: calc(100vh - 5rem)
+  height: calc(100vh - 10rem)
   justify-content: center
-  margin-top: 1em
-  margin-bottom: 1em
+  margin-top: 3em
 
 .input
   margin-bottom: .2em

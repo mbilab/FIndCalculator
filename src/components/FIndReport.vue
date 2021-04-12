@@ -1,7 +1,7 @@
 <template lang="pug">
 .-report
   .ui.container.segment
-    .ui.statistic(@click='setPageShown("FIndCalculator")')
+    .ui.statistic(@click='setPage("FIndCalculator")')
       .value: a {{ totalAsset }}
       .label: a
         i.chart.line.icon
@@ -113,7 +113,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['setTotalAsset', 'setPageShown']),
+    ...mapMutations(['setTotalAsset', 'setPage']),
 
     randomAssets() {
       let assets = Object.keys(this.assets).map(v => Math.random())
@@ -151,9 +151,9 @@ export default {
 .ui.segment
   display: flex
   flex-direction: column
-  height: calc(100vh - 5rem)
+  height: calc(100vh - 10rem)
   justify-content: center
-  margin-top: 1em
+  margin-top: 3em
   text-align: center
 
 .-chart

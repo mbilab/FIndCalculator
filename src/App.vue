@@ -2,11 +2,7 @@
 #app
   .-header
     h2.ui.header MOORE
-  .-body
-    keep-alive
-      component(:is="pageShown")
-    // FIndCalculator(v-show='pageShown=="claculator"')
-    // FIndReport(v-if='pageShown=="report"')
+  .-body: keep-alive: component(:is='page')
 </template>
 
 <script>
@@ -16,7 +12,7 @@ import { mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapState(['pageShown'])
+    ...mapState(['page'])
   },
   components: {
     FIndCalculator,
@@ -42,7 +38,6 @@ body
 
 .-header
   background-color: white
-  border-bottom: 1px solid rgba(34, 36, 38, 0.15)
   display: flex
   height: $header-height
   //justify-content: space-between
@@ -54,15 +49,4 @@ body
 
 .-header > .ui.header
   line-height: $header-height
-  padding: 0 1rem
-
-.-nav-links
-  display: flex
-  align-items: center
-  a
-    padding: 0 1em
-
-.-body
-  height: 100vh
-  padding-top: $header-height
 </style>
