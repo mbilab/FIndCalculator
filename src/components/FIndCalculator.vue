@@ -194,7 +194,6 @@ export default {
       this.chartData.datasets[3].data = assets
       this.chartData.labels = labels
       this.$nextTick(() => {
-        console.log(this.$refs.chart.clientHeight)
         this.chartHeight = this.$refs.chart.clientHeight
       })
     }

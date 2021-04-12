@@ -11,32 +11,21 @@
     .-chart(ref='chart')
       doughnut-chart(v-if='doughnutLoaded' :chartdata='chartData' :options='chartOptions' :style='{ height: chartHeight + "px" }')
 
-    .-tables
-      table.ui.celled.compact.small.unstackable.table
-        thead(@click='reportAsset'): tr: th(colspan='2'): a 資產
+    table.ui.celled.compact.small.unstackable.table
+      thead: tr
+        th(@click='reportAsset' colspan='2'): a 資產
           i.file.alternate.outline.icon
-        tbody
-          tr(v-for='(value, key) in assets')
-            td {{ key }}
-            td {{ value }}
-        tfoot
-          tr
-            th 合計
-            th {{ totalAsset + 802605 }}
-      table.ui.celled.compact.small.unstackable.table
-        thead(@click='reportDebt'): tr: th(colspan='2'): a 負債
+        th(@click='reportDebt' colspan='2'): a 負債
           i.file.alternate.outline.icon
-        tbody
-          tr(v-for='d in debt')
-            td {{ d.name }}
-            td {{ d.value }}
-          tr
-            td -
-            td -
-        tfoot
-          tr
-            th 合計
-            th 802605
+      tbody
+        tr(v-for='row in assets')
+          td(v-for='cell in row') {{ cell }}
+      tfoot
+        tr
+          th 合計
+          th {{ totalAsset + 802605 }}
+          th 合計
+          th 802605
 
   #asset-report-template
     swal-title 資產面
@@ -89,26 +78,20 @@ export default {
   data() {
     return {
       doughnutLoaded: true,
-      assets: {
-        存款: 0,
-        證券: 0,
-        信託: 0,
-        債券: 0,
-        自設資產: 0
-      },
+      assets: [
+        ['存款', 0, '貸款', 8000000],
+        ['證券', 0, '信用卡款', 2605],
+        ['信託', 0, '融資借款', '-'],
+        ['債券', 0, '自設負債', '-'],
+        ['自設資產', 0, '-', '-']
+      ],
       chartHeight: 200,
       chartOptions: {
         maintainAspectRatio: false,
         plugins: { colorschemes: { scheme: 'brewer.PastelOne6' } },
         responsive: true
       },
-      data: null,
-      debt: [
-        { name: '貸款', value: 800000 },
-        { name: '信用卡款', value: 2605 },
-        { name: '融資借款', value: '-' },
-        { name: '自設負債', value: '-' }
-      ]
+      data: null
     }
   },
 
@@ -116,23 +99,16 @@ export default {
     ...mapMutations(['setTotalAsset', 'setPage']),
 
     randomAssets() {
-      let assets = Object.keys(this.assets).map(v => Math.random())
+      let assets = this.assets.map(v => Math.random())
       let sum = assets.reduce((a, c) => a + c, 0)
       assets = assets.map(v =>
         Math.round((v / sum) * (this.totalAsset + 802605))
       )
-      for (let asset in this.assets) this.assets[asset] = assets.pop()
-
-      let datasets = [
-        {
-          label: 'Assets',
-          data: Object.values(this.assets)
-        }
-      ]
+      for (let asset of this.assets) asset[1] = assets.pop()
 
       this.chartData = {
-        labels: Object.keys(this.assets),
-        datasets: datasets
+        datasets: [{ data: this.assets.map(v => v[1]) }],
+        labels: this.assets.map(v => v[0])
       }
     },
 
@@ -160,18 +136,8 @@ export default {
   flex: 1 1 auto
   position: relative
 
-.-tables
-  display: flex
-  align-items: flex-start
-  > table:nth-child(1)
-    border-bottom-right-radius: 0
-    border-top-right-radius: 0
-  > table:nth-child(2)
-    border-bottom-left-radius: 0
-    border-left: 0
-    border-top-left-radius: 0
-  td:nth-child(2), tfoot th:nth-child(2)
-    text-align: right
+td:nth-child(even), tfoot th:nth-child(even)
+  text-align: right
 
 .ui.statistic
   margin: 0
