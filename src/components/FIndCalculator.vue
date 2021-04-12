@@ -1,37 +1,31 @@
 <template lang="pug">
-.-calculator.ui.container.segment
+.-calculator.ui.container.form.segment
 
-  h2.ui.header(v-show="!initialized") 歡迎來到 MOORE，幫您實現財富自由的好夥伴，立刻開始體驗吧！
-  br(v-if="!initialized")
+  h2.ui.header(v-show='!initialized') 歡迎來到 MOORE，幫您實現財務自由的好夥伴，立刻開始體驗吧！
 
-  .ui.fluid.labeled.input(:class="{ disabled: initialized, mini: initialized }")
+  //.ui.input(:class='inputClass')
     .ui.orange.label 初始資產
-    input(type="number" v-model.number="initAsset")
-  .ui.fluid.labeled.input(:class="{ disabled: initialized, mini: initialized }")
+    input(v-model.number='initAsset' type='number')
+  .ui.input(:class='inputClass')
     .ui.orange.label 每月存入
-    input(type="number" v-model.number="monthlyDeposit")
-  .ui.fluid.labeled.input(:class="{ disabled: initialized, mini: initialized }")
+    input(v-model.number='monthlyDeposit' type='number')
+  .ui.input(:class='inputClass')
     .ui.orange.label 退休開支
-    input(type="number" v-model.number="monthlySpending")
-  br(v-if="!initialized")
-  button.ui.fluid.primary.button(v-if="!initialized" @click='plotPlan') Go!
+    input(v-model.number='monthlySpending' type='number')
+  button.ui.fluid.primary.button(v-if='!initialized' @click='plotPlan') Go!
 
-  .-initialized(v-if="initialized")
+  .-initialized(v-if='initialized')
     .ui.divider
-    .ui.statistic(v-if="choices.length" @click='setPageShown("FIndReport")')
-      .value: a {{ totalAssets }}
-      .label: a
-        i.pie.chart.icon
-        | 總資產
+    .ui.statistic(v-if='choices.length' @click='setPageShown("FIndReport")')
+      .value: a {{ totalAsset }}
+      .label: a #[i.pie.chart.icon]總資產
     .ui.statistic(v-else)
-      .value {{ totalAssets }}
+      .value {{ totalAsset }}
       .label 總資產
     br
     p 現在是 {{ year }} 年，想要投資什麼嗎？
     .ui.basic.fluid.tiny.buttons
-      button.ui.button(@click='choose("台股")') 台股
-      button.ui.button(@click='choose("美股")') 美股
-      button.ui.button(@click='choose("債券")') 債券
+      button.ui.button(v-for='v in investTargets' @click='choose(v)') {{ v }}
     .ui.divider
 
   .-chart(v-if='initialized' ref='chart')
@@ -52,14 +46,14 @@ export default {
     LineChart
   },
   computed: {
-    ...mapState(['_totalAssets']),
+    ...mapState(['totalAsset']),
 
-    totalAssets: {
-      get() {
-        return this._totalAssets
-      },
-      set(v) {
-        this.setTotalAssets(v)
+    inputClass() {
+      return {
+        disabled: this.initialized,
+        fluid: true,
+        labeled: true,
+        mini: this.initialized
       }
     },
 
@@ -73,15 +67,17 @@ export default {
       chartData: {
         labels: [],
         datasets: [
-          { data: [0], fill: false, label: '實際', type: 'line' },
-          { data: [], label: '目標存入' },
-          { data: [], label: '目標資產' }
+          { data: [0], fill: false, label: '永豐表現', type: 'line' },
+          { data: [0], fill: false, label: '平均表現', type: 'line' },
+          { data: [], label: '投入資金' },
+          { data: [], label: '計畫資產' }
         ]
       },
       chartOptions: {
+        legend: { labels: { boxWidth: 12 } },
         maintainAspectRatio: false,
         plugins: {
-          colorschemes: { reverse: true, scheme: 'brewer.OrRd4' }
+          colorschemes: { reverse: true, scheme: 'brewer.OrRd5' }
         },
         responsive: true,
         scales: {
@@ -101,6 +97,7 @@ export default {
       initAsset: 0,
       initialized: false,
       initYear: 2000,
+      investTargets: ['台股', '美股', '債券'],
       monthlyDeposit: 30000,
       monthlySpending: 50000,
       targetAsset: 10000000
@@ -108,7 +105,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['setTotalAssets', 'setPageShown']),
+    ...mapMutations(['setPageShown', 'setTotalAsset']),
 
     choose(target) {
       let historicalProfits = [
@@ -134,17 +131,28 @@ export default {
         { 台股: 0.04, 美股: -0.14, 債券: 0.0 },
         { 台股: 0.04, 美股: -0.09, 債券: 0.09 }
       ]
-      let assets = this.chartData.datasets[0].data
       let i = this.choices.length
-      let profitMean =
-        i < historicalProfits.length ? historicalProfits[i][target] : 0.1
-      let profit = gaussian(profitMean, 0.1 ** 2).random(1)[0]
       let yearDeposit = this.monthlyDeposit * 12
+
+      // sinopac
+      let assets = this.chartData.datasets[0].data
+      let profitMean = 0.1
+      let profit = gaussian(profitMean, 0.02 ** 2).random(1)[0]
+      if (assets[i] > this.targetAsset)
+        assets.push(Math.floor(assets[i] * 1.06 - this.monthlySpending * 12))
+      else assets.push(Math.floor((assets[i] + yearDeposit) * (1 + profit)))
+
+      // other
+      assets = this.chartData.datasets[1].data
+      profitMean =
+        i < historicalProfits.length ? historicalProfits[i][target] : 0.1
+      profit = gaussian(profitMean - 0.02, 0.05 ** 2).random(1)[0]
       assets.push(Math.floor((assets[i] + yearDeposit) * (1 + profit)))
-      this.totalAssets = assets[i + 1]
+
+      this.setTotalAsset(assets[i + 1])
       this.choices.push(target)
       this.chartData = { ...this.chartData } // trigger re-draw
-      if (assets[i + 1] > 10000000) this.goal()
+      if (assets[i + 1] > this.targetAsset) this.goal()
     },
 
     goal() {
@@ -153,35 +161,37 @@ export default {
         imageUrl:
           'https://img.ltn.com.tw/Upload/news/600/2018/11/23/phpbTcO8E.jpg',
         imageWidth: 275,
-        text: this.initYear + this.choices.length + ' 年，一起邁向財富自由。',
+        text: this.initYear + this.choices.length + ' 年，一起邁向財務自由。',
         title: '發大財！'
       })
     },
 
     plotPlan() {
-      this.chartData.datasets[0].data[0] = this.initAsset
-      this.totalAssets = this.initAsset
-      this.initialized = true
-
       let activeAssets = [this.initAsset]
       let assets = [this.initAsset]
       let i
       let labels = [this.initYear]
       let profit = 0.1
+      let yearDeposit = this.monthlyDeposit * 12
+      let yearSpending = this.monthlySpending * 12
+
+      this.chartData.datasets[0].data[0] = this.initAsset
+      this.setTotalAsset(this.initAsset)
+      this.initialized = true
+      this.targetAsset = yearSpending / 0.06
+
       for (i = 0; assets[i] < this.targetAsset; ++i) {
-        let yearDeposit = this.monthlyDeposit * 12
         activeAssets.push(activeAssets[i] + yearDeposit)
         assets.push(Math.floor((assets[i] + yearDeposit) * (1 + profit)))
         labels.push(labels[i] + 1)
       }
       for (let j = 0; j < 5; ++i, ++j) {
-        let yearSpending = this.monthlySpending * 12
         activeAssets.push(activeAssets[i])
         assets.push(Math.floor(assets[i] * (1 + 0.06)) - yearSpending)
         labels.push(labels[i] + 1)
       }
-      this.chartData.datasets[1].data = activeAssets
-      this.chartData.datasets[2].data = assets
+      this.chartData.datasets[2].data = activeAssets
+      this.chartData.datasets[3].data = assets
       this.chartData.labels = labels
       this.$nextTick(() => {
         this.chartHeight = this.$refs.chart.clientHeight
@@ -198,12 +208,9 @@ export default {
 </script>
 
 <style scoped lang="sass">
-.container
+.ui.container
   display: flex
   flex-direction: column
-
-.ui.segment
-  display: flex
   height: calc(100vh - 5rem)
   justify-content: center
   margin-top: 1em
@@ -211,6 +218,9 @@ export default {
 
 .input
   margin-bottom: .2em
+
+.primary.button
+  margin-top: 1em
 
 .-initialized
   text-align: center

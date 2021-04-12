@@ -6,10 +6,10 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   mutations: {
     setPageShown: (state, v) => (state.pageShown = v),
-    setTotalAssets: (state, v) => (state._totalAssets = v)
+    setTotalAsset: (state, v) => (state.totalAsset = v)
   },
   state: {
-    _totalAssets: 0,
-    pageShown: 'FIndCalculator'
+    pageShown: 'FIndCalculator',
+    totalAsset: 0
   }
 })

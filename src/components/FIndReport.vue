@@ -2,7 +2,7 @@
 .-report
   .ui.container.segment
     .ui.statistic(@click='setPageShown("FIndCalculator")')
-      .value: a {{ totalAssets }}
+      .value: a {{ totalAsset }}
       .label: a
         i.chart.line.icon
         | 總資產
@@ -22,7 +22,7 @@
         tfoot
           tr
             th 合計
-            th {{ totalAssets + 802605 }}
+            th {{ totalAsset + 802605 }}
       table.ui.celled.compact.small.unstackable.table
         thead(@click='reportDebt'): tr: th(colspan='2'): a 負債
           i.file.alternate.outline.icon
@@ -71,16 +71,7 @@ export default {
   },
   components: { DoughnutChart },
   computed: {
-    ...mapState(['_totalAssets']),
-
-    totalAssets: {
-      get() {
-        return this._totalAssets
-      },
-      set(v) {
-        this.setTotalAssets(v)
-      }
-    },
+    ...mapState(['totalAsset']),
 
     chartData: {
       get() {
@@ -122,13 +113,13 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['setTotalAssets', 'setPageShown']),
+    ...mapMutations(['setTotalAsset', 'setPageShown']),
 
     randomAssets() {
       let assets = Object.keys(this.assets).map(v => Math.random())
       let sum = assets.reduce((a, c) => a + c, 0)
       assets = assets.map(v =>
-        Math.round((v / sum) * (this.totalAssets + 802605))
+        Math.round((v / sum) * (this.totalAsset + 802605))
       )
       for (let asset in this.assets) this.assets[asset] = assets.pop()
 
@@ -190,6 +181,9 @@ export default {
 .ui.table
   margin-bottom: 0
   margin-top: 1em
+
+#asset-report-template, #debt-report-template
+  display: none
 </style>
 
 <style lang="sass">
