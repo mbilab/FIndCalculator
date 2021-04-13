@@ -1,23 +1,10 @@
 import { Bar, mixins } from 'vue-chartjs'
 import 'chartjs-plugin-colorschemes'
 
-const { reactiveProp } = mixins
-
 export default {
   extends: Bar,
-  mixins: [reactiveProp],
-
-  props: {
-    chartData: {
-      default: null,
-      type: Object
-    },
-    options: {
-      default: null,
-      type: Object
-    }
-  },
-
+  mixins: [mixins.reactiveProp],
+  props: ['chartData', 'options'],
   mounted() {
     this.renderChart(this.chartData, this.options)
   }

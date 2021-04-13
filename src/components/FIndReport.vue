@@ -1,31 +1,30 @@
 <template lang="pug">
-.-report
-  .ui.container.segment
-    .ui.statistic(@click='setPage("FIndCalculator")')
-      .value: a {{ totalAsset }}
-      .label: a
-        i.chart.line.icon
-        | 總資產
-    .ui.divider
+.-report.ui.container.segment
+  .ui.statistic(@click='setPage("FIndCalculator")')
+    .value: a {{ totalAsset }}
+    .label: a
+      i.chart.line.icon
+      | 總資產
+  .ui.divider
 
-    .-chart(ref='chart')
-      doughnut-chart(v-if='doughnutLoaded' :chartdata='chartData' :options='chartOptions' :style='{ height: chartHeight + "px" }')
+  .-chart(ref='chart')
+    doughnut-chart(v-if='doughnutLoaded' :chart-data='chartData' :options='chartOptions' :style='{ height: chartHeight + "px" }')
 
-    table.ui.celled.compact.small.unstackable.table
-      thead: tr
-        th(@click='reportAsset' colspan='2'): a 資產
-          i.file.alternate.outline.icon
-        th(@click='reportDebt' colspan='2'): a 負債
-          i.file.alternate.outline.icon
-      tbody
-        tr(v-for='row in assets')
-          td(v-for='cell in row') {{ cell }}
-      tfoot
-        tr
-          th 合計
-          th {{ totalAsset + 802605 }}
-          th 合計
-          th 802605
+  table.ui.celled.compact.small.unstackable.table
+    thead: tr
+      th(@click='reportAsset' colspan='2'): a 資產
+        i.file.alternate.outline.icon
+      th(@click='reportDebt' colspan='2'): a 負債
+        i.file.alternate.outline.icon
+    tbody
+      tr(v-for='row in assets')
+        td(v-for='cell in row') {{ cell }}
+    tfoot
+      tr
+        th 合計
+        th {{ totalAsset + 802605 }}
+        th 合計
+        th 802605
 
   #asset-report-template
     swal-title 資產面
@@ -46,19 +45,21 @@
 
 <script>
 import Swal from 'sweetalert2'
+import { mapMutations, mapState } from 'vuex'
 
 import DoughnutChart from './DoughnutChart.js'
-import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'FIndReport',
+  components: { DoughnutChart },
+
   activated() {
     this.randomAssets()
     this.$nextTick(() => {
       this.chartHeight = this.$refs.chart.clientHeight
     })
   },
-  components: { DoughnutChart },
+
   computed: {
     ...mapState(['totalAsset']),
 

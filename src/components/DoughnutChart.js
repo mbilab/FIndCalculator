@@ -3,17 +3,8 @@ import 'chartjs-plugin-colorschemes'
 
 export default {
   extends: Doughnut,
-  props: {
-    chartdata: {
-      type: Object,
-      default: null
-    },
-    options: {
-      type: Object,
-      default: null
-    }
-  },
+  props: ['chartData', 'options'],
   mounted() {
-    this.renderChart(this.chartdata, this.options)
+    this.renderChart(this.chartData, this.options)
   }
 }

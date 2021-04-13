@@ -3,20 +3,17 @@
 
   h2.ui.header(v-show='!initialized') 歡迎來到 MOORE，幫您實現財務自由的好夥伴，立刻開始體驗吧！
 
-  //.ui.input(:class='inputClass')
-    .ui.orange.label 初始資產
-    input(v-model.number='initAsset' type='number')
   .ui.input(:class='inputClass')
     .ui.orange.label 每月存入
     input(v-model.number='monthlyDeposit' type='number')
   .ui.input(:class='inputClass')
     .ui.orange.label 退休開支
     input(v-model.number='monthlySpending' type='number')
-  button.ui.fluid.primary.button(v-if='!initialized' @click='plotPlan') Go!
+  button.ui.fluid.primary.button(v-if='!initialized' @click='plotPlan') GO!
 
   .-initialized(v-if='initialized')
     .ui.divider
-    label.ui.basic.teal.label(@click='setPage("FIndSpending")') *支出
+    label.ui.basic.teal.label(@click='setPage("FIndSpending")') 支出*
     .ui.statistic(v-if='choices.length' @click='setPage("FIndReport")')
       .value: a {{ totalAsset }}
       .label: a #[i.pie.chart.icon]總資產
@@ -43,9 +40,8 @@ import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'FIndCalculator',
-  components: {
-    LineChart
-  },
+  components: { LineChart },
+
   computed: {
     ...mapState(['totalAsset']),
 
@@ -60,18 +56,21 @@ export default {
 
     year() {
       return this.initYear + this.choices.length
+    },
+
+    yearSpending() {
+      return this.monthlySpending * 12
     }
   },
 
   data() {
     return {
       chartData: {
-        labels: [],
         datasets: [
           { data: [0], fill: false, label: '永豐表現', type: 'line' },
           { data: [0], fill: false, label: '平均表現', type: 'line' },
-          { data: [], label: '投入資金' },
-          { data: [], label: '計畫資產' }
+          { label: '投入資金' },
+          { label: '計畫資產' }
         ]
       },
       chartOptions: {
@@ -86,7 +85,7 @@ export default {
             {
               ticks: {
                 callback: function(value, index, values) {
-                  return Math.floor(value / 10000) + 'W'
+                  return Math.floor(value / 1000000) + 'M'
                 }
               }
             }
@@ -140,7 +139,7 @@ export default {
       let profitMean = 0.1
       let profit = gaussian(profitMean, 0.02 ** 2).random(1)[0]
       if (assets[i] > this.targetAsset)
-        assets.push(Math.floor(assets[i] * 1.06 - this.monthlySpending * 12))
+        assets.push(Math.floor(assets[i] * 1.06 - this.yearSpending))
       else assets.push(Math.floor((assets[i] + yearDeposit) * (1 + profit)))
 
       // other
@@ -158,11 +157,9 @@ export default {
 
     goal() {
       Swal.fire({
-        imageHeight: 183,
         imageUrl:
           'https://img.ltn.com.tw/Upload/news/600/2018/11/23/phpbTcO8E.jpg',
-        imageWidth: 275,
-        text: this.initYear + this.choices.length + ' 年，一起邁向財務自由。',
+        text: this.year + ' 年，一起邁向財務自由。',
         title: '發大財！'
       })
     },
@@ -172,23 +169,22 @@ export default {
       let assets = [this.initAsset]
       let i
       let labels = [this.initYear]
-      let profit = 0.1
       let yearDeposit = this.monthlyDeposit * 12
-      let yearSpending = this.monthlySpending * 12
+
+      this.setTotalAsset(this.initAsset)
 
       this.chartData.datasets[0].data[0] = this.initAsset
-      this.setTotalAsset(this.initAsset)
       this.initialized = true
-      this.targetAsset = yearSpending / 0.06
+      this.targetAsset = this.yearSpending / 0.06
 
       for (i = 0; assets[i] < this.targetAsset; ++i) {
         activeAssets.push(activeAssets[i] + yearDeposit)
-        assets.push(Math.floor((assets[i] + yearDeposit) * (1 + profit)))
+        assets.push(Math.floor((assets[i] + yearDeposit) * 1.1))
         labels.push(labels[i] + 1)
       }
       for (let j = 0; j < 5; ++i, ++j) {
         activeAssets.push(activeAssets[i])
-        assets.push(Math.floor(assets[i] * (1 + 0.06)) - yearSpending)
+        assets.push(Math.floor(assets[i] * 1.06) - this.yearSpending)
         labels.push(labels[i] + 1)
       }
       this.chartData.datasets[2].data = activeAssets
