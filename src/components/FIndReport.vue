@@ -125,11 +125,6 @@ export default {
 
 <style scoped lang="sass">
 .ui.segment
-  display: flex
-  flex-direction: column
-  height: calc(100vh - 10rem)
-  justify-content: center
-  margin-top: 3em
   text-align: center
 
 .-chart

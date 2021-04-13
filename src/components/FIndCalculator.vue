@@ -16,6 +16,7 @@
 
   .-initialized(v-if='initialized')
     .ui.divider
+    label.ui.basic.teal.label(@click='setPage("FIndSpending")') *支出
     .ui.statistic(v-if='choices.length' @click='setPage("FIndReport")')
       .value: a {{ totalAsset }}
       .label: a #[i.pie.chart.icon]總資產
@@ -201,20 +202,14 @@ export default {
 
   mounted() {
     return
+    this.plotPlan()
     this.choose('台股')
-    this.setPage('FIndReport')
+    this.setPage('FIndSpending')
   }
 }
 </script>
 
 <style scoped lang="sass">
-.ui.container
-  display: flex
-  flex-direction: column
-  height: calc(100vh - 10rem)
-  justify-content: center
-  margin-top: 3em
-
 .input
   margin-bottom: .2em
 
@@ -224,13 +219,14 @@ export default {
 .-initialized
   text-align: center
 
+label
+  position: absolute
+  right: 1rem
+
 .ui.statistic
   margin-top: 0
   > .value
     font-size: 2rem !important
-
-p
-  text-align: center
 
 .-chart
   flex: 1 1 auto

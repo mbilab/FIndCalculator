@@ -7,7 +7,6 @@
 
 <script>
 import 'semantic-ui-offline/semantic.css'
-import FIndCalculator from '@/components/FIndCalculator.vue'
 import { mapState } from 'vuex'
 
 export default {
@@ -15,8 +14,9 @@ export default {
     ...mapState(['page'])
   },
   components: {
-    FIndCalculator,
-    FIndReport: () => import('./components/FIndReport.vue')
+    FIndCalculator: () => import('./components/FIndCalculator.vue'),
+    FIndReport: () => import('./components/FIndReport.vue'),
+    FIndSpending: () => import('./components/FIndSpending.vue')
   }
 }
 </script>
@@ -49,4 +49,11 @@ body
 
 .-header > .ui.header
   line-height: $header-height
+
+.ui.container
+  display: flex
+  flex-direction: column
+  height: calc(100vh - 10rem)
+  justify-content: center
+  margin-top: 3em !important
 </style>
