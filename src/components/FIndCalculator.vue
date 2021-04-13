@@ -27,7 +27,7 @@
     .ui.divider
 
   .-chart(v-if='initialized' ref='chart')
-    line-chart(:chart-data="chartData" :options='chartOptions' :style='{ height: chartHeight + "px" }')
+    line-chart(:chart-data='chartData' :options='chartOptions' :style='{ height: chartHeight + "px" }')
 
 </template>
 
@@ -218,13 +218,4 @@ export default {
 label
   position: absolute
   right: 1rem
-
-.ui.statistic
-  margin-top: 0
-  > .value
-    font-size: 2rem !important
-
-.-chart
-  flex: 1 1 auto
-  position: relative
 </style>

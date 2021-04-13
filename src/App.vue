@@ -56,4 +56,13 @@ body
   height: calc(100vh - 10rem)
   justify-content: center
   margin-top: 3em !important
+
+.ui.statistic
+  margin-top: 0
+  > .value
+    font-size: 2rem !important
+
+.-chart
+  flex: 1 1 auto
+  position: relative
 </style>

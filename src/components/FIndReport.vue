@@ -8,7 +8,7 @@
   .ui.divider
 
   .-chart(ref='chart')
-    doughnut-chart(v-if='doughnutLoaded' :chart-data='chartData' :options='chartOptions' :style='{ height: chartHeight + "px" }')
+    doughnut-chart(:chart-data='chartData' :options='chartOptions' :style='{ height: chartHeight + "px" }')
 
   table.ui.celled.compact.small.unstackable.table
     thead: tr
@@ -55,30 +55,14 @@ export default {
 
   activated() {
     this.randomAssets()
-    this.$nextTick(() => {
-      this.chartHeight = this.$refs.chart.clientHeight
-    })
   },
 
   computed: {
-    ...mapState(['totalAsset']),
-
-    chartData: {
-      get() {
-        return this.data
-      },
-      set(v) {
-        this.doughnutLoaded = false
-        this.data = Object.assign({}, this.data, v)
-        // Render doughnut at nextTick
-        this.$nextTick(() => (this.doughnutLoaded = true))
-      }
-    }
+    ...mapState(['totalAsset'])
   },
 
   data() {
     return {
-      doughnutLoaded: true,
       assets: [
         ['存款', 0, '貸款', 8000000],
         ['證券', 0, '信用卡款', 2605],
@@ -86,7 +70,8 @@ export default {
         ['債券', 0, '自設負債', '-'],
         ['自設資產', 0, '-', '-']
       ],
-      chartHeight: 200,
+      chartData: {},
+      chartHeight: 100,
       chartOptions: {
         maintainAspectRatio: false,
         plugins: { colorschemes: { scheme: 'brewer.PastelOne6' } },
@@ -120,35 +105,32 @@ export default {
     reportDebt() {
       Swal.fire({ template: '#debt-report-template' })
     }
+  },
+
+  mounted() {
+    this.$nextTick(() => {
+      this.chartHeight = this.$refs.chart.clientHeight
+    })
   }
 }
 </script>
 
 <style scoped lang="sass">
-.ui.segment
+.ui.container
   text-align: center
-
-.-chart
-  flex: 1 1 auto
-  position: relative
 
 td:nth-child(even), tfoot th:nth-child(even)
   text-align: right
 
-.ui.statistic
-  margin: 0
-  > .value
-    font-size: 2rem !important
-
 .ui.table
   margin-bottom: 0
   margin-top: 1em
-
-#asset-report-template, #debt-report-template
-  display: none
 </style>
 
 <style lang="sass">
+#asset-report-template, #debt-report-template
+  display: none
+
 .-report-template
   text-align: left
 </style>
