@@ -22,16 +22,24 @@
         .header 保險小存摺
         .description 佛心來的保險APP
         .extra
-          .ui.basic.mini.button #[i.linkify.icon]綁定
+          .ui.basic.mini.button(@click='soon') #[i.linkify.icon]綁定
   button.ui.fluid.primary.button(@click='setPage("FIndCalculator")') OK
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 import { mapMutations } from 'vuex'
 export default {
   name: 'FIndSpending',
   methods: {
-    ...mapMutations(['setPage'])
+    ...mapMutations(['setPage']),
+    soon() {
+      Swal.fire({
+        imageUrl:
+          'https://www.nopcommerce.com/images/thumbs/0005720_coming-soon-page_550.jpeg',
+        text: '敬請期待 :)'
+      })
+    }
   }
 }
 </script>
